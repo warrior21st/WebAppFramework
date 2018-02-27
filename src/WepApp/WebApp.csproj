@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <AssemblyName>WebApp</AssemblyName>
+    <RootNamespace>WebApp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
