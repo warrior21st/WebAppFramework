@@ -1,0 +1,387 @@
+﻿@using DDomain.Models.ManageUser
+
+@model List<UserViewModel>
+@{
+    ViewData["Title"] = "用户管理";
+    var list = Model;
+    var allRoles = (List<AspNetRole>)ViewData["allRoles"];
+    var powers = base.UserInterfaceAuthorities;
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        @if (base.UserInterfaceAuthorities.Contains(ManageUser.WRITE))
+        {
+            <a id="addUser" class="btn btn-primary ladda-button">添加</a>
+        }
+        @if (base.UserInterfaceAuthorities.Contains(ManageUser.DELETE))
+        {
+            <a id="delete-list" class="btn btn-danger ladda-button">删除</a>
+        }
+        <table class="@ViewHelper.StandardTableClass">
+            <thead>
+                <tr>
+                    <th class="checkbox-td">
+                        <input type="checkbox" class="i-checks tableChooseAll" />
+                    </th>
+                    <th>用户名</th>
+                    <th>角色</th>
+                    <th>手机号</th>
+                    @*<th class="text-center">登录要求验证手机</th>*@
+                    <th>绑定邮箱</th>
+                    <th class="text-center">是否禁用</th>
+                    <th class="text-center">启用二次验证</th>
+                    <th class="datetime-td-fixed-width text-right">最后登录时间</th>
+                    <th class="datetime-td-fixed-width text-right">创建时间</th>
+                    <th class="text-center">操作</th>
+                    <th class="hide"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (list.Count > 0)
+                {
+                    foreach (var userModel in list)
+                    {
+                        <tr class="read" data-id="@userModel.User.Id">
+                            <td class="checkbox-td">
+                                <input type="checkbox" class="i-checks tableChooseSingle" />
+                            </td>
+                            <td>@userModel.User.UserName</td>
+                            <td>@userModel.Role.AliasName</td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(userModel.User.PhoneNumber))
+                                {
+                                    <span>@userModel.User.PhoneNumber &nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    if (userModel.User.PhoneNumberConfirmed)
+                                    {
+                                        <span class="label label-primary" style="float:right">已验证</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-danger" style="float:right">未验证</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>@ViewHelper.NASymbol</span>
+                                }
+                            </td>
+                            @*<td class="text-center">@(userModel.User.LoginVerifyPhoneNumber ? "是" : "否")</td>*@
+                            <td>@userModel.User.Email</td>
+                            <td class="text-center">@(userModel.User.IsDisabled ? "是" : "否")</td>
+                            <td class="text-center">@(userModel.User.TwoFactorEnabled ? "是" : "否")</td>
+                            <td class="text-right datetime-td-fixed-width">@userModel.User.LastLoginTime.ToLocalDateTimeString()</td>
+                            <td class="datetime-td-fixed-width text-right">@userModel.User.CreateTime.ToLocalDateTimeString()</td>
+                            <td class="text-center">
+                                @if (powers.Contains(ManageUser.WRITE))
+                                {
+                                    <button type="button" class="ladda-button btn btn-primary btn-sm edituser" data-style="expand-right">编辑</button>
+                                }
+                                @if (powers.Contains(ManageUser.DELETE) || powers.Contains(ManageUser.SET_USER_AUTHORITY))
+                                {
+                                    <div class="btn-group">
+                                        <button data-toggle="dropdown" class="ladda-button btn btn-primary btn-sm dropdown-toggle" data-style="expand-right">操作 <span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            @{
+                                                if (powers.Contains(ManageUser.SET_USER_AUTHORITY))
+                                                {
+                                                    <li class="userAuthorityManage"><a href="/Manage/AuthorityManage/UserAuthorityManage?userName=@userModel.User.UserName">设置用户权限</a></li>
+                                                }
+                                                if (powers.Contains(ManageUser.DELETE))
+                                                {
+                                                    <li class="delete-single"><a href="javascript:void(0);">删除</a></li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                                }
+                            </td>
+                            <td class="hide">@JsonConvert.SerializeObject(userModel)</td>
+                        </tr>
+                                                    }
+
+                                                }
+                                                else
+                                                {
+                                                    @Html.Raw(ViewHelper.StandardNoRecordTr)
+                                                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section modals{
+    <div class="modal inmodal" id="updateUserDialog" tabindex="-2" role="dialog" aria-labelledby="updateUserDialog-title" data-user-id="">
+        <style scoped>
+            /* provides a red astrix to denote required fields - this should be included in common stylesheet */
+            .form-group.required .control-label:after {
+                content: "*";
+                color: red;
+                margin-left: 4px;
+            }
+        </style>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content form-horizontal animated bounceInRight" id="bindmail-editor">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+                    </button>
+                    <h4 id="modal-title">编辑用户</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group required">
+                        <label class="col-sm-3 control-label">用户名</label>
+                        <div class="col-sm-9">
+                            <input id="username" type="text" class="form-control" placeholder="用户名">
+                        </div>
+                    </div>
+                    <div class="form-group required" id="password-container">
+                        <label class="col-sm-3 control-label">密码</label>
+                        <div class="col-sm-9">
+                            <input id="password" type="password" class="form-control" placeholder="密码">
+                        </div>
+                    </div>
+                    <div class="form-group required">
+                        <label class="col-sm-3 control-label">角色</label>
+                        <div class="col-sm-9">
+                            <select id="role" class="form-control">
+                                @foreach (var role in allRoles)
+                                {
+                                    <option value="@role.Name">@role.AliasName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">邮箱</label>
+                        <div class="col-sm-9">
+                            <input id="mail" type="email" class="form-control" placeholder="邮箱">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">手机</label>
+                        <div class="col-sm-9">
+                            <input id="mobile" type="number" class="form-control" placeholder="手机">
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                            <label class="col-md-3 control-label visibility-hidden"></label>
+                            <div class="col-md-9">
+                                <label class="checkbox-inline i-checks">
+                                    <input id="mustVerifyPhoneNumber_checkbox" type="checkbox" />
+                                    要求使用手机验证码登录
+                                </label>
+                            </div>
+                        </div>*@
+                    <div class="form-group">
+                        <label class="col-md-3 control-label visibility-hidden"></label>
+                        <div class="col-md-9">
+                            <label class="checkbox-inline i-checks">
+                                <input id="LoginVerifyToken_checkbox" type="checkbox" />
+                                启用二次验证
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label visibility-hidden"></label>
+                        <div class="col-md-9">
+                            <label class="checkbox-inline i-checks">
+                                <input id="isDisabled_checkbox" type="checkbox" />
+                                禁用
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white btn-sm" data-dismiss="modal">取消</button>
+                    <button id="submitBtn" type="button" class="ladda-button btn btn-primary" data-style="expand-right" title="保存" data-waiting=" 保存中...">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        function showModal(user) {
+            user = user || {
+                id: "",
+                username: "",
+                password: "",
+                role: "",
+                mail: "",
+                mobile: "",
+                isDisabled: false,
+                loginVerifyToken: false
+            };
+
+            $('#updateUserDialog').attr('data-user-id', user.id);
+
+            for (var p in user) {
+                $('#' + p).val(user[p]);
+            }
+            if (user.id) {
+                $('#username').attr('readonly', 'readonly');
+                $('#password-container').hide();
+                $('#modal-title').text('编辑用户');
+            }
+            else {
+                $('#modal-title').text('添加用户');
+                $('#password-container').show();
+                $('#username').removeAttr('readonly');
+            }
+
+            if (user.isDisabled) {
+                $('#isDisabled_checkbox').iCheck('check');
+            }
+            else {
+                $('#isDisabled_checkbox').iCheck('uncheck');
+            }
+            if (user.loginVerifyToken) {
+                $('#LoginVerifyToken_checkbox').iCheck('check');
+            }
+            else {
+                $('#LoginVerifyToken_checkbox').iCheck('uncheck');
+            }
+
+            $('#updateUserDialog').modal('show');
+        };
+
+        $('#addUser').on('click', function () {
+            showModal();
+        });
+
+        $('.edituser').on('click', function () {
+            var data = JSON.parse($(this).parents('tr').children().last().html());
+            user = {
+                id: data.User.Id,
+                username: data.User.UserName,
+                password: "",
+                role: data.Role.Name,
+                mail: data.User.Email,
+                mobile: data.User.PhoneNumber,
+                isDisabled: data.User.IsDisabled,
+                loginVerifyToken: data.User.TwoFactorEnabled
+            };
+
+            showModal(user);
+        });
+
+        $('#submitBtn').on('click', function () {
+            var role = $('#role').val();
+            var user = {
+                Id: $('#updateUserDialog').attr('data-user-id'),
+                UserName: $('#username').val().trim(),
+                Email: $('#mail').val().trim(),
+                PhoneNumber: $('#mobile').val(),
+                IsDisabled: $('#isDisabled_checkbox').is(':checked'),
+                TwoFactorEnabled:$('#LoginVerifyToken_checkbox').is(':checked')
+            };
+            if (!user.Id) {
+                user.PasswordHash = $('#password').val();
+            }
+
+            if (!user.UserName) {
+                utils.ShowError('请输入用户名');
+                return;
+            }
+            if (!user.Id && !user.PasswordHash) {
+                utils.ShowError('请输入密码');
+                return;
+            }
+            if (!role) {
+                utils.ShowError('请选择角色');
+                return;
+            }
+            if (!user.Email) {
+                utils.ShowError('邮箱不能为空');
+                return;
+            }
+
+            var para = {
+                role: role,
+                user: user
+            };
+
+            console.log(para);
+            var url = para.user.Id ? "/Manage/AuthorityManage/UpdateUser" : "/Manage/AuthorityManage/AddUser";
+            var loading = Ladda.create(this);
+            loading.start();
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "json",
+                data: para,
+                success: function (e) {
+                    utils.ShowSuccess("保存成功", function () {
+                        window.location.reload(true);
+                    });
+                },
+                error: function (e) {
+                    utils.ShowAjaxError(e);
+                },
+                complete: function () {
+                    loading.stop();
+                }
+            })
+        });
+
+        function deleteUsers(ids) {
+            swal({
+                title: "是否继续？",
+                text: "即将删除" + ids.length + "个用户，该操作不可逆，是否继续？",
+                type: "warning",
+                confirmButtonColor: "#ED5565",
+                confirmButtonText: "是",
+                cancelButtonText: "否",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+            }, function () {
+                $.ajax({
+                    url: "/Manage/AuthorityManage/DeleteUsers",
+                    type: "post",
+                    dataType: "json",
+                    data: { ids: ids },
+                    success: function (e) {
+                        utils.ShowSuccess("删除成功", function () {
+                            window.location.reload(true);
+                        });
+                    },
+                    error: function (e) {
+                        utils.ShowAjaxError(e);
+                    },
+                    complete: function () {
+
+                    }
+                });
+            });
+
+        }
+
+        $('#delete-list').on('click', function () {
+            var ids = getTableChoosed();
+            if (ids.length == 0) {
+                utils.ShowError("请选择用户");
+                return;
+            }
+
+            deleteUsers(ids);
+        });
+
+        $('.delete-single').on('click', function () {
+            var ids = [];
+            var id = $(this).parents('tr').attr('data-id');
+            ids.push(id);
+
+            deleteUsers(ids);
+        });
+
+    </script>
+}

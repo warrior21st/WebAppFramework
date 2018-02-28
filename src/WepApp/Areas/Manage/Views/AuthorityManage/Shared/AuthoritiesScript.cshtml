@@ -1,0 +1,11 @@
+﻿<script type="text/javascript">
+
+    $('.chooseAll').on('ifChecked ifUnchecked', function () {
+        if ($(this).is(':checked')) {
+            $($(this).parents('.panel-body')[0]).find('.i-checks:not(:disabled)').iCheck('check');
+        }
+        else { 
+            $($(this).parents('.panel-body')[0]).find('.i-checks:not(:disabled)').iCheck('uncheck');
+        }
+    });
+</script>

@@ -1,0 +1,147 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EnableAuthenticator</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="stylesheet" href="~/lib/summernote/summernote.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-markdown/css/bootstrap-markdown.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="~/lib/metisMenu/dist/metisMenu.css" />
+    <link rel="stylesheet" href="~/lib/iCheck/custom.css" />
+    <link rel="stylesheet" href="~/lib/footable/css/footable.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+    <link rel="stylesheet" href="~/lib/ladda/dist/ladda.min.css" />
+    <link rel="stylesheet" href="~/style/lib/inspinia/animate.css" />
+    <link rel="stylesheet" href="~/lib/silviomoreto-bootstrap/bootstrap-select.css" />
+    <link rel="stylesheet" href="~/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />
+    <link rel="stylesheet" href="~/lib/dataTables/datatables.min.css" />
+    <link rel="stylesheet" href="~/style/lib/inspinia/inspinia.css" asp-append-version="true" />
+    <environment names="Development">
+        <link rel="stylesheet" href="~/style/manager/manager.css" asp-append-version="true" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/style/manager.min.css" asp-append-version="true" />
+    </environment>
+
+</head>
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div>
+                <h1 class="logo-name">DDomain</h1>
+                <h4>使用用户名与密码获取认证器地址</h4>
+            </div>
+            <div class="form-horizontal">
+                <hr />
+                <div class="form-group">
+                    <input id="userName" type="text" class="form-control" placeholder="UserName" />
+                </div>
+                <div class="form-group">
+                    <input id="password" type="password" class="form-control" placeholder="Password" />
+                </div>
+                <div class="form-group">
+                    <button id="submit" type="button" class="btn btn-primary block full-width m-b ladda-button" data-style="expand-right">获取认证器地址</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" tabindex="-1" role="dialog" aria-labelledby="convert-modal-title">
+        <div class="modal-dialog" role="document" id="vuebody">
+            <div class="modal-content form-horizontal animated bounceInRight" id="bindmail-editor">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+                    </button>
+                    <h4>请使用Google Authenticator扫描下面二维码</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="qrCode" style="width:100%;height:100%;display:flex;justify-content:center;align-items:center;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+<environment names="Development">
+    <!-- End wrapper-->
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="~/lib/metisMenu/dist/metisMenu.js"></script>
+    <script type="text/javascript" src="~/lib/pace/pace.js"></script>
+    <script type="text/javascript" src="~/lib/footable/js/footable.js"></script>
+    <script type="text/javascript" src="~/lib/sweetalert/dist/sweetalert-dev.js"></script>
+    <script type="text/javascript" src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+    <script type="text/javascript" src="~/lib/iCheck/icheck.min.js"></script>
+    <script type="text/javascript" src="~/lib/dataTables/datatables.min.js"></script>
+    <!--ladda start-->
+    <script type="text/javascript" src="~/lib/ladda/dist/spin.min.js"></script>
+    <script type="text/javascript" src="~/lib/ladda/dist/ladda.min.js"></script>
+    <script type="text/javascript" src="~/lib/ladda/dist/ladda.jquery.min.js"></script>
+    <!--ladda end-->
+    <!--summernote start-->
+    <script type="text/javascript" src="~/lib/summernote/summernote.min.js"></script>
+    <script type="text/javascript" src="~/lib/summernote/summernote-zh-CN.js"></script>
+    <!--summernote end-->
+    <script type="text/javascript" src="~/js/lib/vue.min.js"></script>
+    <script type="text/javascript" src="~/lib/silviomoreto-bootstrap/bootstrap-select.js"></script>
+
+    <script type="text/javascript" src="~/js/src/utils.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/src/manager/script.js" asp-append-version="true"></script>
+</environment>
+<environment names="Staging,Production">
+    <script type="text/javascript" src="~/js/dist/manager.min.js" asp-append-version="true"></script>
+</environment>
+<script type="text/javascript">
+
+    $('#submit').on('click', function () {
+        var para = {
+            userName: $('#userName').val().trim(),
+            password: $('#password').val()
+        }
+        if (!para.userName || para.password.length == 0) {
+            return;
+        }
+
+        var loading = Ladda.create(this);
+        loading.start();
+        $.ajax({
+            url: "/Manage/Account/GetAuthenticatorUri",
+            type: "get",
+            dataType: "json",
+            data: para,
+            success: function (e) {
+                var url = e.data;
+                //url = "otpauth://totp/xxx?secret=gpzo5znisupupwmb&issuer=DDomain.io";
+                document.getElementById("qrCode").innerHTML = "";
+                new QRCode(document.getElementById("qrCode"),
+                    {
+                        text: url,
+                        width: 150,
+                        height: 150
+                    });
+
+                $('.modal').modal('show');
+            },
+            error: function (e) {
+                utils.ShowAjaxError(e);
+            },
+            complete: function () {
+                loading.stop();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,13 @@
+﻿
+@model KeyValuePair<string,string>
+
+<div class="pull-right mail-search">
+    <div class="input-group">
+        <input id="searchInput" type="text" class="form-control input-sm" value="@Model.Value" placeholder="@Model.Key">
+        <div class="input-group-btn">
+            <button id="searchBtn" type="button" class="ladda-button btn btn-sm btn-primary" data-style="expand-right">
+                查找
+            </button>
+        </div>
+    </div>
+</div>

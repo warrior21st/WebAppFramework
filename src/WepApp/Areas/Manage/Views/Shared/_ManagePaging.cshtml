@@ -1,0 +1,110 @@
+﻿
+@model PagingModel
+
+@{
+    if (Model != null && Model.Total > 0)
+    {
+        var pagingModel = Model;
+        int pageCount = Convert.ToInt32(pagingModel.Total / pagingModel.PageSize);
+        pageCount += pagingModel.Total % pagingModel.PageSize > 0 ? 1 : 0;
+        <ul id="pagingContainer" class="pagination pull-right">
+            @{
+                if (pagingModel.PageIndex > 1)
+                {
+                    string firstlink = pagingModel.GetFirstPageUrl();
+                    string prevlink = pagingModel.GetPreviousPageUrl();
+                    <li id="firstpage" class="footable-page-arrow"><a href="@firstlink">首页</a></li>
+                                    <li id="prevpage" class="footable-page-arrow"><a href="@prevlink">上一页</a></li>
+                }
+                else
+                {
+                    <li id="firstpage" class="footable-page-arrow disabled"><a href="javascript:void(0);">首页</a></li>
+                                    <li id="prevpage" class="footable-page-arrow disabled"><a href="javascript:void(0);">上一页</a></li>
+                }
+                int initStart = 4;
+                int initEnd = 5;
+                int startPages = initStart;
+                int endPages = initEnd;
+                int start = pagingModel.PageIndex - startPages + 2;
+                string link = "";
+                if (start < 1)
+                {
+                    start = 1;
+                }
+
+                if (pageCount <= startPages + endPages + 1)
+                {
+                    for (int j = 1; j <= pageCount; j++)
+                    {
+                        if (j == pagingModel.PageIndex)
+                        {
+                            <li class="active"><a href="javascript:void(0);">@j</a></li>
+                        }
+                        else
+                        {
+                            link = pagingModel.GetPageUrlByPageIndex(j);
+                            <li><a href="@link">@j</a></li>
+                        }
+                    }
+                }
+                else
+                {
+                    if (pageCount - startPages - endPages >= pagingModel.PageIndex)
+                    {
+                        for (int j = start; j <= start + startPages + 2; j++)
+                        {
+                            if (j == pagingModel.PageIndex)
+                            {
+                                <li class="active"><a href="javascript:void(0);">@j</a></li>
+                            }
+                            else
+                            {
+                                link = pagingModel.GetPageUrlByPageIndex(j);
+                                <li><a href="@link">@j</a></li>
+                            }
+                        }
+
+                        <li class="footable-page-arrow disabled"><a href="javascript:void(0);">...</a></li>
+
+                        for (int k = pageCount - endPages + 1; k <= pageCount; k++)
+                        {
+                            link = pagingModel.GetPageUrlByPageIndex(k);
+                            <li><a href="@link">@k</a></li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="footable-page-arrow disabled"><a href="javascript:void(0);">...</a></li>
+
+                        for (int k = pageCount - startPages - endPages; k <= pageCount; k++)
+                        {
+                            if (k == pagingModel.PageIndex)
+                            {
+                                <li class="active"><a href="javascript:void(0);">@k</a></li>
+                            }
+                            else
+                            {
+                                link = pagingModel.GetPageUrlByPageIndex(k);
+                                <li><a href="@link">@k</a></li>
+                            }
+                        }
+                    }
+                }
+
+
+                if (pagingModel.PageIndex < pageCount)
+                {
+                    string lastlink = pagingModel.GetPageUrlByPageIndex(pageCount);
+                    string nextlink = pagingModel.GetNextPageUrl();
+                    <li id="nextpage" class="footable-page-arrow"><a href="@nextlink">下一页</a></li>
+                                    <li id="lastpage" class="footable-page-arrow"><a href="@lastlink">尾页</a></li>
+                }
+                else
+                {
+                    <li id="nextpage" class="footable-page-arrow disabled"><a href="javascript:void(0);">下一页</a></li>
+                                    <li id="lastpage" class="footable-page-arrow disabled"><a href="javascript:void(0);">尾页</a></li>
+                }
+            }
+        </ul>
+                }
+}

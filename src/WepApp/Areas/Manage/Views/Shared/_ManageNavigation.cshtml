@@ -1,0 +1,144 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using DDomain.Areas.Manage.Authority
+@using DDomain.Models.Auth
+
+@inject AuthorityManager authenticator
+@{
+    var powers = new List<InterfaceOperationModel>();
+    if (User != null && User.Identity != null && !string.IsNullOrWhiteSpace(User.Identity.Name))
+    {
+        powers = await authenticator.GetUserAuthoritiesByUserNameAsync(User.Identity.Name);
+    }
+}
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                <div class="logo-element">
+                    <a href="/">DDomain</a>
+                </div>
+            </li>
+            @if (powers.HasAnyInterfaceAuthority(nameof(ManageLanguage), nameof(ManageLanguageDetail)))
+            {
+                <li class="@Html.IsSelected(controller: "Language")">
+                    <a><i class="fa fa-language" title="语言管理"></i><span class="nav-label" data-i18n="nav.dashboard">语言管理</span></a>
+                    <ul class="nav nav-second-level">
+                        @if (powers.HasOperaAuthority(nameof(ManageLanguage), ManageLanguage.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "List", controller: "Language")">
+                                <a href="@Url.Action("List", "Language")">语言列表</a>
+                            </li>
+                        }
+                        @if (powers.HasOperaAuthority(nameof(ManageLanguageDetail), ManageLanguageDetail.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "Detail", controller: "Language")">
+                                <a href="@Url.Action("Detail", "Language")">语言详情</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            @if (powers.HasAnyInterfaceAuthority(nameof(ManageDomains)))
+            {
+                <li class="@Html.IsSelected(controller: "Domain")">
+                    <a><i class="fa fa-list-alt" title="域名管理"></i><span class="nav-label" data-i18n="nav.dashboard">域名管理</span></a>
+                    <ul class="nav nav-second-level">
+                        @if (powers.HasOperaAuthority(nameof(ManageDomains), ManageDomains.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "List", controller: "Domain")">
+                                <a href="@Url.Action("List", "Domain")">域名列表</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            @if (powers.HasAnyInterfaceAuthority(nameof(ManageOrders)))
+            {
+                <li class="@Html.IsSelected(controller: "Orders")">
+                    <a><i class="fa fa-list-ul" title="订单管理"></i><span class="nav-label" data-i18n="nav.dashboard">订单管理</span></a>
+                    <ul class="nav nav-second-level">
+                        @if (powers.HasOperaAuthority(nameof(ManageOrders), ManageOrders.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "UnderReview", controller: "Orders")">
+                                <a href="@Url.Action("UnderReview", "Orders")">订单列表</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            @if (powers.HasAnyInterfaceAuthority(nameof(ManageConsumer), nameof(ManageAppLoginLog), nameof(ManageWallets)))
+            {
+                <li class="@Html.IsSelected(controller: "AppUsers")">
+                    <a><i class="fa fa-users" title="消费者管理"></i><span class="nav-label" data-i18n="nav.dashboard">消费者管理</span></a>
+                    <ul class="nav nav-second-level">
+                        @if (powers.HasOperaAuthority(nameof(ManageConsumer), ManageConsumer.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "List", controller: "AppUsers")">
+                                <a href="@Url.Action("List", "AppUsers")">消费者列表</a>
+                            </li>
+                        }
+                        @if (powers.HasOperaAuthority(nameof(ManageWallets), ManageWallets.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "List", controller: "Wallets")">
+                                <a href="@Url.Action("List", "Wallets")">钱包列表</a>
+                            </li>
+                        }
+                        @if (powers.HasOperaAuthority(nameof(ManageBills), ManageBills.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "Deposits", controller: "Bills")">
+                                <a href="@Url.Action("Deposits", "Bills")">充值提现记录</a>
+                            </li>
+                        }
+                        @if (powers.HasOperaAuthority(nameof(ManageAppLoginLog), ManageAppLoginLog.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "LoginLogs", controller: "AppUsers")">
+                                <a href="@Url.Action("LoginLogs", "AppUsers")">登录日志</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            @if (powers.HasAnyInterfaceAuthority(nameof(ManageRoleAuthorities), nameof(ManageUser)))
+            {
+                <li class="@Html.IsSelected(controller: "AuthorityManage")">
+                    <a><i class="fa fa-file-text-o" title="权限管理"></i><span class="nav-label" data-i18n="nav.dashboard">用户/权限管理</span></a>
+                    <ul class="nav nav-second-level">
+                        @if (powers.HasOperaAuthority(nameof(ManageUser), ManageUser.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "Users", controller: "AuthorityManage")">
+                                <a href="@Url.Action("Users", "AuthorityManage")">用户管理</a>
+                            </li>
+                        }
+                        @if (powers.HasOperaAuthority(nameof(ManageRoleAuthorities), ManageRoleAuthorities.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "RoleAuthorityList", controller: "AuthorityManage")">
+                                <a href="@Url.Action("RoleAuthorityList", "AuthorityManage")">角色权限</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            @if (powers.HasAnyInterfaceAuthority(nameof(ManageVCodeEmailTemp), nameof(ManageVCodeSmsTemp)))
+            {
+                <li class="@Html.IsSelected(controller: "Configs")">
+                    <a><i class="fa fa-file-text-o" title="配置管理"></i><span class="nav-label" data-i18n="nav.dashboard">配置管理</span></a>
+                    <ul class="nav nav-second-level">
+                        @if (powers.HasOperaAuthority(nameof(ManageVCodeEmailTemp), ManageVCodeEmailTemp.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "VCodeEmailTemp", controller: "Configs")">
+                                <a href="@Url.Action("VCodeEmailTemp", "Configs")">验证码邮件模板</a>
+                            </li>
+                        }
+                        @if (powers.HasOperaAuthority(nameof(ManageVCodeSmsTemp), ManageVCodeSmsTemp.READ))
+                        {
+                            <li class="@Html.IsSelected(action: "VCodeSmsTemp", controller: "Configs")">
+                                <a href="@Url.Action("VCodeSmsTemp", "Configs")">验证码短信模板</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+        </ul>
+    </div>
+</nav>

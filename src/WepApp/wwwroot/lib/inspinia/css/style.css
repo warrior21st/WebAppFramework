@@ -1,0 +1,281 @@
+
+/* 全局 */
+body,html,ul,li,p{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+    background-color: rgb(240,241,243);
+}
+ul,li{
+    list-style: none;
+}
+a,a:hover,a:active,a:visited{
+    text-decoration: none;
+}
+input{
+    outline: none;
+}
+.left{
+    float: left;
+}
+/* 内容 */
+header{
+    width:100%;
+    height:68px;
+    background-color: rgb(59,23,121);
+    position: relative;
+}
+nav{
+    height:100%;
+}
+header nav #logo{
+    width:92px;
+    margin:0 28px;
+}
+header nav .login{
+    display: inline-block;
+    width:154px;
+    line-height: 68px;
+}
+
+header nav .login  img{
+    margin:0 5px 0 15px;
+}
+header nav .language{
+    display: inline-block;
+    width:96px;
+    line-height: 68px;
+    text-align: center;
+}
+header nav .login_wrap,header nav .language_wrap{
+    height:68px;
+}
+header nav .login:hover .login_wrap,
+header nav .language:hover .language_wrap{
+    background-color: rgb(48,15,105);
+    border-bottom: 2px solid  rgb(34,198,200);
+    position:  relative;
+    z-index: 999;
+}
+.enter_transaction{
+    display: inline-block;
+    color: rgb(34,198,200);
+    height:68px;
+    padding:0 20px;
+}
+header .logo_block{
+    position: absolute;
+    left: 0;
+    color: rgb(34,198,200);
+    font-size: 14px;
+    line-height: 68px;
+}
+header nav .enter_transaction:hover{
+    color: rgb(34,198,200);
+    background-color: rgb(48,15,105);
+    border-bottom: 2px solid  rgb(34,198,200);
+}
+header .acount_block{
+    position: absolute;
+    right: 0;
+    color:rgb(236,233,242);
+    font-size: 14px;
+    line-height: 68px;
+}
+header .acount_block ul{
+    position: relative;
+    z-index: 999;
+    display: none;
+}
+header .acount_block .login ul li{
+    background: rgb(59,23,121);
+    height:39px;
+    padding-left: 20px;
+    line-height: 39px;
+}
+header .acount_block .language ul li{
+    background: rgb(59,23,121);
+    height:39px;
+    padding-left: 10px;
+    line-height: 39px;
+    text-align: justify;
+}
+header .acount_block ul li:hover{
+    background-color: rgb(48,15,105);
+}
+header .acount_block ul li:not(:last-child){
+    border-bottom: 1px solid rgb(36,14,75);
+}
+header .acount_block a{
+    color:white;
+}
+.carousel-inner img{
+    margin:0 auto;
+}
+.carousel-inner{
+    background-color: rgb(0,0,0);
+}
+.carousel-indicators li{
+    border-radius: 0;
+    margin-left:35px;
+    width:7px;
+    height:7px;
+}
+.carousel-indicators .active{
+    width:7px;
+    height:7px;
+    margin:0 0 1px 35px;
+}
+.search_block{
+    width:100%;
+    height:48px;
+    border-bottom: 1px solid rgb(207,207,207);
+}
+.search_s{
+    width:96%;
+    height:100%;
+}
+.search_s span{
+    padding:13px 32px;
+    display: inline-block;
+}
+.selected{
+    color:rgb(34,198,200);
+    border-bottom: 2px solid rgb(34,198,200);
+}
+.search{
+    display: inline-block;
+    margin-left:20px;
+    height:100%;
+}
+.search em{
+    margin-right:20px;
+    border-left:1px solid rgb(151,151,151);
+}
+.search input{
+    width:400px;
+    border: none;
+    height:70%;
+}
+#container{
+    display: flex;
+}
+#container{
+    margin:16px 0 20px 0;
+}
+#market{
+    width:1202px;
+    margin: 0 auto;
+    border: 1px solid rgb(207,207,207);
+    background-color: white;
+}
+#market .market_table{
+    width:96%;
+    margin:0 auto;
+}
+table{
+    color:rgb(155,155,155);
+}
+table thead tr{
+    height:46px;
+    line-height: 46px;
+}
+.table-condensed>thead>tr>th{
+    padding:13px 37px;
+    text-align: center;
+    font-weight: 100px;
+    border:none;
+}
+.table>thead>tr>td,
+.table>thead>tr>th{
+    border-top: none;
+}
+.table-condensed>tbody>tr>td{
+    padding:10px 0;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, 
+.table>tfoot>tr>td, .table>tfoot>tr>th, 
+.table>thead>tr>td, .table>thead>tr>th{
+    border-top:none;
+}
+table tbody tr{
+    height:37px;
+    text-align: center;
+    border: none;
+}
+table tbody tr span{
+    color:rgb(248,172,88);
+}
+table tbody tr:nth-of-type(even){
+    background-color: rgb(240,241,243);
+}
+table tbody tr:hover{
+    background-color: rgba(59,23,121,0.17);
+}
+footer{
+    position: relative;
+    width:100%;
+}
+footer .wrap{
+    position: relative;
+    width:1202px;
+    margin: 0 auto;
+}
+.copyright{
+    position: absolute;
+    left: 0;
+    font-size: 12px;
+    color: rgb(154,153,153);
+    padding: 20px 0;
+    margin-top: 10px;
+}
+.dex_logo_gray{
+    position: absolute;
+    right:0;
+    padding: 20px 0;
+}
+table tbody tr td{
+    position: relative;
+}
+
+table tbody tr:nth-of-type(even) .fa-star::before {
+    color:rgb(216,216,216);
+    position: absolute;
+    left: 10px;
+    margin:-12px 20px 0 0;
+}
+table tbody tr:nth-of-type(odd) .fa-star::before {
+    position: absolute;
+    left: 10px;
+    margin:-12px 20px 0 0;
+    color:rgb(156,97,255);
+}
+.search_s .fa-star::before{
+    margin-right: 5px;
+    color:rgb(0,0,0);
+}
+.fa-th-list::before,.fa-sign-in::before{
+    color:rgb(34,198,200);
+    margin-left: -10px;
+    margin-right:5px;
+}
+
+.fa-search::before{
+    color:rgb(142,142,147);
+}
+
+.flag{
+    background: url(../images/flags.png);
+    width:18px;
+    height:12px;
+    display: inline-block;
+    margin-bottom: -1px;
+    margin-right:5px;
+}
+.fa-user-o::before,.fa-plus::before{
+    margin-right:10px;
+}
+.flag-cn{background-position:0 0;}
+.flag-en{background-position:0 -21px;}
+.flag-jp{background-position:0 -84px;}
+.flag-kr{background-position:0 -42px;}

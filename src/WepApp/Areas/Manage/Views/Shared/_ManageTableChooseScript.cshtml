@@ -1,0 +1,33 @@
+﻿
+<script type="text/javascript">
+    window.tableChoosed = [];
+    $('.tableChooseAll').on('ifChecked ifUnchecked', function () {
+
+        if ($(this).is(":checked")) {
+            $(this).parents('table').children('tbody').find('.tableChooseSingle').iCheck('check');
+        }
+        else {
+            $(this).parents('table').children('tbody').find('.tableChooseSingle').iCheck('uncheck');
+        }
+    });
+
+    $('.tableChooseSingle').on('ifChecked ifUnchecked', function () {
+        var id = parseInt($(this).parents('tr').attr('data-id'));
+        if (isNaN(id)) {
+            id = $(this).parents('tr').attr('data-id');
+        }
+        if ($(this).is(":checked")) {
+            window.tableChoosed.push(id);
+        }
+        else {
+            window.tableChoosed.splice(window.tableChoosed.indexOf(id), 1);
+        }
+
+        console.log(window.tableChoosed);
+    });
+
+    function getTableChoosed() {
+        return window.tableChoosed;
+    }
+
+</script>

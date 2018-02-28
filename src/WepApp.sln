@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WepApp\WebApp.csproj", "{AB1928F3-CCB6-425D-9480-AFA19785C256}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WepApp\WebApp.csproj", "{AB1928F3-CCB6-425D-9480-AFA19785C256}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.Models", "WebApp.Models\WebApp.Models.csproj", "{C2CFCF1F-277B-4086-B557-14FB91D28E0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Models", "WebApp.Models\WebApp.Models.csproj", "{C2CFCF1F-277B-4086-B557-14FB91D28E0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.DAL", "WebApp.DAL\WebApp.DAL.csproj", "{B553134D-E09D-4A0C-B81D-7EBA088327CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.DAL", "WebApp.DAL\WebApp.DAL.csproj", "{B553134D-E09D-4A0C-B81D-7EBA088327CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonHelpers", "CommonHelpers\CommonHelpers.csproj", "{48BB4730-DB8A-4B29-92A7-D4C65E74CBE9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleAuthenticator", "GoogleAuthenticator\GoogleAuthenticator.csproj", "{A0BB6C69-E138-4E4A-8AC4-49A0CA5B9164}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{48BB4730-DB8A-4B29-92A7-D4C65E74CBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48BB4730-DB8A-4B29-92A7-D4C65E74CBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48BB4730-DB8A-4B29-92A7-D4C65E74CBE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0BB6C69-E138-4E4A-8AC4-49A0CA5B9164}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0BB6C69-E138-4E4A-8AC4-49A0CA5B9164}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0BB6C69-E138-4E4A-8AC4-49A0CA5B9164}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0BB6C69-E138-4E4A-8AC4-49A0CA5B9164}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,322 @@
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  vertical-align: middle;
+}
+body {
+  font-size: 14px;
+}
+.md-skin .page-heading {
+  box-shadow: none;
+}
+.md-skin .ibox {
+  box-shadow: none;
+}
+.md-skin .navbar-static-side,
+.md-skin .navbar-static-top,
+.md-skin .navbar-fixed-top {
+  box-shadow: none;
+}
+.md-skin .mail-box,
+.md-skin .mail-box-header {
+  box-shadow: none;
+}
+.md-skin .nav-tabs li {
+  background-color: white;
+  border-left: none;
+  border-bottom: none;
+  margin-bottom: 0px;
+}
+.md-skin .nav-tabs li.active {
+  background-color: white;
+  border-left: none;
+  border-bottom: none;
+  margin-bottom: -3px;
+  bottom: -2px;
+}
+.md-skin .nav-tabs li.active a {
+  border-bottom: none;
+  margin-right: 0;
+}
+.md-skin .social-feed-box {
+  box-shadow: none;
+}
+.md-skin .social-avatar img {
+  height: 32px;
+  width: 32px;
+}
+.md-skin .social-feed-box {
+  border-bottom: 1px solid #efefef;
+}
+.md-skin .social-avatar .media-body a {
+  font-size: 15px;
+  display: inline;
+}
+.md-skin .social-avatar .media-body span {
+  font-size: 15px;
+}
+.md-skin .delete-track-memo {
+  font-size: 12px;
+  margin-left: 2px;
+}
+.md-skin .domain-more-action li {
+  display: inline;
+  margin-right: 15px;
+}
+.md-skin .track-header {
+  padding: 20px 0;
+}
+.md-skin .dashboard-header {
+  box-shadow: none;
+}
+.md-skin .note-text {
+  padding: 15px 0;
+}
+.md-skin .track-summary {
+  min-height: 200px;
+  padding-top: 60px;
+}
+body.mini-navbar .navbar-default .nav ul li a span {
+  display: inline;
+}
+body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
+  font-size: 13px;
+}
+.timeline-item .content {
+  border-left: 1px solid #e7eaec;
+  border-top: 1px solid #e7eaec;
+  padding-top: 10px;
+  min-height: 10px;
+}
+.inmodal .modal-header {
+  padding: 15px;
+}
+.inmodal .modal-footer .btn {
+  margin-bottom: 5px;
+}
+.timeline-item .content {
+  padding-top: 2px;
+}
+.ladda-button {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 12px;
+}
+.margin-top-10 {
+  margin-top: 10px !important;
+}
+.color-black {
+  color: black;
+}
+.input-tips {
+  list-style: none;
+  position: absolute;
+  background: white;
+  z-index: 1000;
+  border: 1px solid #e5e6e7;
+  border-radius: 1px;
+  color: inherit;
+  display: block;
+  padding: 6px 12px 6px 6px;
+  width: calc(70%);
+  font-size: 14px;
+  display: none;
+}
+.input-tips li:hover {
+  background: #DDDDDD;
+  cursor: default;
+}
+.date-td {
+  min-width: 80px;
+}
+.datetime-td {
+  min-width: 140px;
+}
+.min-height-0 {
+  min-height: 0px !important;
+}
+.table-bordered thead tr th {
+  background: white !important;
+}
+#domainTable td {
+  max-width: 200px;
+}
+.registrant-tld {
+  min-width: 70px;
+  word-break: break-word;
+}
+.registrar-tld {
+  min-width: 70px;
+}
+.email-td {
+  min-width: 95px;
+  word-break: break-word;
+}
+.sitetitle-tld {
+  width: 100px;
+}
+.max-width-200 {
+  max-width: 200px !important;
+}
+.break-all {
+  word-break: break-all;
+}
+.break-word {
+  word-break: break-word;
+}
+.domain-table-menu {
+  left: -100%;
+}
+.domain-table-menu li a {
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.text-overflow-hidden {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.scroll-box {
+  width: 100%;
+  overflow-y: hidden;
+  margin-right: -1px;
+  overflow-x: auto;
+}
+.fixedtable {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #fff;
+}
+.domain-table-topright {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 400px;
+}
+.tracklist-table .data-td {
+  min-width: 100px;
+}
+.tracklist-table .remark-td {
+  max-width: 200px;
+}
+.tracklist-table .last-log-td {
+  min-width: 140px;
+  width: 140px;
+}
+.tracklist-table .operate-td {
+  width: 200px;
+}
+.tracklist-table .sendbox-count-td {
+  width: 60px;
+}
+.tracklist-table .memo-count-td {
+  width: 60px;
+}
+.tracklist-table .price-td {
+  width: 110px;
+}
+.tracklist-table .priority-td {
+  width: 80px;
+}
+.tracklist-table .message-td {
+  width: 200px;
+}
+.track-detail-price .price {
+  width: 150px;
+}
+.track-detail-price .edit-icon {
+  margin-left: 10px;
+}
+.disable-color {
+  color: #c4c4c4 !important;
+}
+.domain-table-container {
+  min-height: 600px;
+}
+.visibility-hidden {
+  visibility: hidden;
+}
+.priority-color {
+  color: #fbca04 !important;
+}
+.customerTable .last-update-td {
+  width: 140px;
+}
+.datetime-td-fixed-width {
+  width: 160px;
+}
+.ip-td {
+  width: 160px;
+}
+.domain-history-delete-icon {
+  cursor: pointer;
+  position: absolute;
+  left: 94%;
+  top: 5%;
+}
+.add-domain-history-modal-body {
+  height: 500px;
+  overflow-y: auto;
+}
+.table-container {
+  overflow-x: auto;
+}
+.order-list-table .data-td {
+  min-width: 100px;
+}
+.order-list-table .order-id-td {
+  min-width: 40px;
+}
+.domain-factors-table .data-td {
+  min-width: 100px;
+}
+.checkbox-td {
+  width: 30px;
+}
+.operation-td {
+  width: 200px;
+  text-align:center;
+}
+#top-search {
+  color: white;
+}
+
+.language-td{
+    width:50px;
+    text-align:center;
+}
+
+.page-main-title{
+    margin:0 !important;
+}
+
+icon-td{
+    width:50px;
+}
+
+.control-label-padding{
+    padding-top:7px;
+}
+
+.nav-header {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.token-symbol-label {
+    color: #ffffff !important;
+    background: black;
+    padding: 2px 5px 2px 5px;
+    font-size: 12px !important;
+    height: 18px;
+    margin-left: 3px;
+    position: relative;
+    top: -1px;
+    font-weight:normal;
+}

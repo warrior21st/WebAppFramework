@@ -1,0 +1,94 @@
+﻿
+@model Dictionary<AspNetRole, List<DDomainInterfaceOperation>>
+
+@{
+    ViewData["Title"] = "角色权限";
+    var dic = Model;
+    var all = (List<AuthorityModel>)ViewData["allAuthorities"];
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <ul class="nav nav-tabs">
+            @{
+                var i = 0;
+                foreach (var kvp in dic)
+                {
+                    if (kvp.Key.Name == nameof(RoleTypes.Admin))
+                    {
+                        continue;
+                    }
+                    var css = i == 0 ? "active" : "";
+                    <li class="@css">
+                        <a data-toggle="tab" href="#@kvp.Key.Name" aria-expanded="true">
+                            @kvp.Key.AliasName
+                        </a>
+                    </li>
+                    i++;
+                }
+            }
+        </ul>
+        <div class="tab-content">
+            @{
+                i = 0;
+                foreach (var kvp in dic)
+                {
+                    if (kvp.Key.Name == nameof(RoleTypes.Admin))
+                    {
+                        continue;
+                    }
+                    var css = i == 0 ? "active" : "";
+                    <div id="@kvp.Key.Name" class="tab-pane @css">
+                        <div class="panel-body">
+                            @Html.Partial("Shared/Authorities", new KeyValuePair<List<DDomainInterfaceOperation>, List<AuthorityModel>>(kvp.Value, all))
+                        </div>
+                        @if (base.UserInterfaceAuthorities.Contains(ManageRoleAuthorities.WRITE))
+                        {
+                            <div class="hr-line-dashed"></div>
+                            <button type="button" class="btn btn-primary ladda-button submit" data-style="expand-right">保存</button>
+                        }
+                    </div>
+                    i++;
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts{ 
+    @Html.Partial("Shared/AuthoritiesScript")
+    <script type="text/javascript">
+        $('.submit').on('click', function () {
+            var ids = [];
+            var tab = $($(this).parents('.tab-pane')[0]);
+            var checkboxes = tab.find('.allAuthorities').find('.i-checks');
+            var roleName = tab.attr('id');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (!$(checkboxes[i]).hasClass('chooseAll')&& $(checkboxes[i]).is(':checked')) {
+                    ids.push(parseInt($(checkboxes[i]).attr('data-operation-id')));
+                }
+            }
+
+            console.log(ids);
+
+            var loading = Ladda.create(this);
+            loading.start();
+            $.ajax({
+                url: "/Manage/AuthorityManage/SaveRoleAuthority",
+                type: "post",
+                dataType: "json",
+                data: { role: roleName, operationIds: ids },
+                success: function (e) {
+                    utils.ShowSuccess("保存成功");
+                },
+                error: function (e) {
+                    utils.ShowAjaxError(e);
+                },
+                complete: function () {
+                    loading.stop();
+                }
+            })
+        });
+    </script>
+}

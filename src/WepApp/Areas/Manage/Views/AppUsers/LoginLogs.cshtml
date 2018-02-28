@@ -1,0 +1,56 @@
+﻿
+@using CommonHelpers.Helpers
+
+@model List<DDomainAppLoginLog>
+
+@{
+    Layout = "_ManageLayout";
+    ViewData["container-css"] = "col-lg-12";
+    ViewData["Title"] = "消费者登录日志";
+    var list = Model;
+    var paging = (PagingModel)ViewData["paging"];
+    var appUsers = (List<DDomainAppUser>)ViewData["appUsers"];
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("_ManagePageSizeSelector", paging)
+        <table class="@ViewHelper.StandardTableClass">
+            <thead>
+                <tr>
+                    <th>用户</th>
+                    <th>IP</th>
+                    <th>国家</th>
+                    <th>城市</th>
+                    <th>UserAgent</th>
+                    <th class="datetime-td-fixed-width text-right">时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (list.Count > 0)
+                {
+                    foreach (var log in list)
+                    {
+                        var user = appUsers.Single(x => x.Id == log.Uid);
+                        <tr class="read" data-id="@log.Id">
+                            <td>@user.AliasName</td>
+                            <td>@log.Ip</td>
+                            <td>@log.Country</td>
+                            <td>@log.City</td>
+                            <td>@log.UserAgent</td>
+                            <td class="datetime-td-fixed-width text-right">@user.CreateTime.ToLocalDateTimeString()</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    @Html.Raw(ViewHelper.StandardNoRecordTr)
+                }
+            </tbody>
+        </table>
+        @if (paging.PageCount > 1)
+        {
+            @Html.Partial("_ManagePaging", paging)
+        }
+    </div>
+</div>

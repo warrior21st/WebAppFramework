@@ -1,0 +1,8 @@
+﻿<script type="text/javascript">
+    $('#pageSizeSelector').on('change', function () {
+        var pagesize = $(this).val();
+        var url = window.location.href;
+        url = utils.AddParamToUrl(url, "pageSize", pagesize);
+        window.location.href = url;
+    });
+</script>

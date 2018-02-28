@@ -1,0 +1,16 @@
+﻿
+<script type="text/javascript">
+    $('.sorting,.sorting_asc,.sorting_desc').on('click', function () {
+        var columnName = $(this).attr('data-column-name');
+        var url = window.location.href;
+        url = utils.AddParamToUrl(url, "sort", columnName);
+        if ($(this).hasClass('sorting_desc')) {
+            url = utils.AddParamToUrl(url, "order", "asc");
+        }
+        else {
+            url = utils.AddParamToUrl(url, "order", "desc");
+        }
+
+        window.location.href = url;
+    });
+</script>

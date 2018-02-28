@@ -1,0 +1,76 @@
+﻿
+@model KeyValuePair<List<DDomainInterfaceOperation>, List<AuthorityModel>>
+
+@{
+    var hasOperations = Model.Key;
+    var allAuthorities = Model.Value;
+    var disableOperations = ViewData["disableOperations"] == null ? new List<DDomainInterfaceOperation>() : (List<DDomainInterfaceOperation>)ViewData["disableOperations"];
+}
+
+
+@foreach (var auth in allAuthorities)
+{
+    <div class="panel panel-default allAuthorities">
+        <div class="panel-heading">
+            <h3>@auth.GroupName</h3>
+        </div>
+        <div class="panel-body">
+            @foreach (var intf in auth.Interfaces)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h4 class="pull-left">@intf.InterfaceDescription</h4>
+                                @*@{
+                                        var chooseAllId = $"operation_chooseAll_{Guid.NewGuid().ToString()}";
+                                        <label for="@chooseAllId" class="pull-left" style="margin-left:10px;">
+                                            <input id="@chooseAllId" type="checkbox" class="i-checks chooseAll" />全选
+                                        </label>
+                                    }*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        @{
+                            var i = 0;
+                            var disCount = 0;
+                            foreach (var op in intf.Operations)
+                            {
+                                var id = $"operation_{Guid.NewGuid().ToString()}";
+                                var checkedAttr = "";
+                                var disableAttr = "";
+                                var labelTitle = "";
+                                if (hasOperations.Count(x => x.Id == op.Id) > 0)
+                                {
+                                    checkedAttr = "checked='checked'";
+                                    i++;
+                                }
+                                if (disableOperations.Count(x => x.Id == op.Id) > 0)
+                                {
+                                    disableAttr = "disabled='disabled'";
+                                    labelTitle = "该权限是角色所含权限，不可在此修改";
+                                    disCount++;
+                                }
+                                <label for="@id" style="margin-left:10px;" title="@labelTitle">
+                                    <input id="@id" data-operation-id="@op.Id" data-operation-name="@op.Name" type="checkbox" class="i-checks" @checkedAttr @disableAttr />
+                                    @op.Description
+                                </label>
+                            }
+                            var chooseAllId = $"operation_chooseAll_{Guid.NewGuid().ToString()}";
+                            var labelAttrAll = disCount == intf.Operations.Count ? "title='该权限是角色所含权限，不可在此修改'" : "";
+                            <label for="@chooseAllId" class="pull-right" style="margin-left:10px;" @labelAttrAll>
+                                @{
+                                    var checkedAttrAll = i == intf.Operations.Count ? "checked='checked'" : "";
+                                    var disAttrAll = disCount == intf.Operations.Count ? "disabled='disabled'" : "";
+                                    <input id="@chooseAllId" type="checkbox" class="i-checks chooseAll" @checkedAttrAll @disAttrAll />
+                                }
+                                全部
+                            </label>
+                        }
+                    </div>
+                </div>
+                                    }
+        </div>
+    </div>
+                                    }

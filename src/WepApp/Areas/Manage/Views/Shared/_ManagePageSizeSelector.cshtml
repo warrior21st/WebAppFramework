@@ -1,0 +1,30 @@
+﻿@model PagingModel
+@{ 
+    var paging = Model;
+}
+
+<div class="pull-right domain-table-topright">
+    <div>
+        <label class="control-label">总数：</label>
+        <span>@paging.Total</span>
+    </div>
+    &nbsp;&nbsp;
+    <div>
+        <label class="control-label">每页行数：</label>
+    </div>
+    <div>
+        <select id="pageSizeSelector" class="form-control">
+            @foreach (var i in PagingModel.PageSizeArray)
+            {
+                if (paging.PageSize == i)
+                {
+                    <option value="@i" selected="selected">@i</option>
+                }
+                else
+                {
+                    <option value="@i">@i</option>
+                }
+            }
+        </select>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+﻿@using CommonHelpers.Helpers
+
+@model List<DDomainAppUser>
+
+@{
+    Layout = "_ManageLayout";
+    ViewData["Title"] = "用户管理";
+    ViewData["container-css"] = "col-lg-12";
+    var list = Model;
+    var paging = (PagingModel)ViewData["paging"];
+    var tokens = (List<DDomainPayToken>)ViewData["tokens"];
+    var languages = (List<DDomainLanguage>)ViewData["languages"];
+    var walletCounts = (List<dynamic>)ViewData["walletCounts"];
+}
+
+@section search{
+    @Html.Partial("_ManageSearch", new KeyValuePair<string, string>("输入昵称搜索", base.Search))
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("_ManagePageSizeSelector", paging)
+        <table class="@ViewHelper.StandardTableClass">
+            <thead>
+                <tr>
+                    <th>昵称</th>
+                    <th>手机</th>
+                    <th>邮箱</th>
+                    <th class="text-center">偏好语言</th>
+                    @{
+                        foreach (var token in tokens)
+                        {
+                            <th class="text-right">@($"{token.TokenSymbol}余额")</th>
+                        }
+                    }
+                    <th class="text-right">绑定钱包数</th>
+                    <th class="datetime-td-fixed-width text-right">最后登录时间</th>
+                    <th class="datetime-td-fixed-width text-right">创建时间</th>
+                    <th class="text-center">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (list.Count > 0)
+                {
+                    foreach (var user in list)
+                    {
+                        var href = $"/Manage/AppUsers/Detail/{user.Id}";
+                        var balas = user.GetBalances();
+                        var lang = languages.SingleOrDefault(x => x.LanguageName == user.LanguageName);
+                        var walletCount = walletCounts.SingleOrDefault(x => x.Id == user.Id);
+                        <tr class="read" data-id="@user.Id">
+                            <td><a href="@href">@user.AliasName</a></td>
+                            <td><a href="@href">@(user.PhoneAuthenticationEnabled ? $"+{user.PhoneNumberAreaCode} {user.PhoneNumber}" : "")</a></td>
+                            <td><a href="@href">@user.MailAddress</a></td>
+                            <td class="text-center">
+                                <a title="@user.LanguageName" href="/Manage/Language/Detail?lang=@user.LanguageName">
+                                    @if (lang != null)
+                                    {
+                                        <img style="width:26px;height:17px;" src="@lang.FlagUri" />
+                                    }
+                                    else
+                                    {
+                                        <span>@user.LanguageName</span>
+                                    }
+                                </a>
+                            </td>
+                            @foreach (var token in tokens)
+                            {
+                                var bala = balas.Single(x => x.TokenSymbol == token.TokenSymbol);
+                                <td class="text-right" style="color:@token.DisplayColor">@bala.Balance.TrimEndDecimalZero()</td>
+                            }
+                            <td class="text-right">@(walletCount == null ? 0 : walletCount.Count)</td>
+                            <td class="datetime-td-fixed-width text-right">@user.LastLoginTime.ToLocalDateTimeString()</td>
+                            <td class="datetime-td-fixed-width text-right">@user.CreateTime.ToLocalDateTimeString()</td>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" class="ladda-button btn btn-primary btn-sm dropdown-toggle" data-style="expand-right">操作 <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="@href">查看详情</a></li>
+                                        <li><a href="/Manage/Orders/UserOrders/@user.Id">查看用户订单</a></li>
+                                        <li><a href="/Manage/Domain/UserDomains/@user.Id">查看用户域名</a></li>
+                                        <li><a href="/Manage/Bills/UserDeposits/@user.Id">查看充值提现记录</a></li>
+                                        <li><a href="/Manage/AppUsers/LoginLogs/@user.Id">查看登录日志</a></li>
+                                    </ul>
+                                </div>
+
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    @Html.Raw(ViewHelper.StandardNoRecordTr)
+                }
+            </tbody>
+        </table>
+        @if (paging.PageCount > 1)
+        {
+            @Html.Partial("_ManagePaging", paging)
+        }
+    </div>
+</div>

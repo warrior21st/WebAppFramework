@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DDomain</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Add local styles, mostly for plugins css file -->
+    @if (IsSectionDefined("Styles"))
+    {@RenderSection("Styles", required: false)}
+
+    <link rel="stylesheet" href="~/lib/summernote/summernote.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-markdown/css/bootstrap-markdown.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="~/lib/metisMenu/dist/metisMenu.css" />
+    <link rel="stylesheet" href="~/lib/iCheck/custom.css" />
+    <link rel="stylesheet" href="~/lib/footable/css/footable.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+    <link rel="stylesheet" href="~/lib/ladda/dist/ladda.min.css" />
+    <link rel="stylesheet" href="~/lib/silviomoreto-bootstrap/bootstrap-select.css" />
+    <link rel="stylesheet" href="~/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />
+    <link rel="stylesheet" href="~/lib/dataTables/datatables.min.css" />
+    <link rel="stylesheet" href="~/lib/inspinia/animate.css" />
+    <link rel="stylesheet" href="~/lib/inspinia/inspinia.css" />
+    <environment names="Development">
+        <link rel="stylesheet" href="~/css/src/manager/manager.css" asp-append-version="true" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/css/dist/manager.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body class="md-skin">
+    <!-- Wrapper-->
+    <div id="wrapper" class="@Html.PageClass()">
+
+        <!-- Navigation -->
+        @Html.Partial("_ManageNavigation")
+
+        <!-- Page wraper -->
+        <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
+
+            <!-- Top Navbar -->
+            @Html.Partial("_ManageTopNavbar")
+            @if (ViewData["isManagerIndexView"] != null && (bool)ViewData["isManagerIndexView"])
+            {
+                @RenderBody()
+            }
+            else
+            {
+                <div class="row">
+                    <div class="@(ViewData["container-css"] ?? "col-lg-10")">
+                        <div class="wrapper wrapper-content animated fadeInRight ecommerce ng-scope">
+                            <div class="ibox-content m-b-sm border-bottom">
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <h2 class="page-main-title">@ViewData["Title"]</h2>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                @RenderSection("search", required: false)
+                                            </div>
+                                        </div>
+
+                                        <hr />
+
+                                        <!-- Main view  -->
+                                        @RenderBody()
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @RenderSection("modals", required: false)
+
+            <!-- Footer -->
+            @Html.Partial("_ManageFooter")
+
+        </div>
+        <!-- End page wrapper-->
+
+    </div>
+    <environment names="Development">
+        <!-- End wrapper-->
+        <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
+        <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="~/lib/metisMenu/dist/metisMenu.js"></script>
+        <script type="text/javascript" src="~/lib/pace/pace.js"></script>
+        <script type="text/javascript" src="~/lib/footable/js/footable.js"></script>
+        <script type="text/javascript" src="~/lib/sweetalert/dist/sweetalert-dev.js"></script>
+        <script type="text/javascript" src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+        <script type="text/javascript" src="~/lib/iCheck/icheck.min.js"></script>
+        <script type="text/javascript" src="~/lib/dataTables/datatables.min.js"></script>
+        <!--ladda start-->
+        <script type="text/javascript" src="~/lib/ladda/dist/spin.min.js"></script>
+        <script type="text/javascript" src="~/lib/ladda/dist/ladda.min.js"></script>
+        <script type="text/javascript" src="~/lib/ladda/dist/ladda.jquery.min.js"></script>
+        <!--ladda end-->
+        <!--summernote start-->
+        <script type="text/javascript" src="~/lib/summernote/summernote.min.js"></script>
+        <script type="text/javascript" src="~/lib/summernote/summernote-zh-CN.js"></script>
+        <!--summernote end-->
+        <script type="text/javascript" src="~/lib/vue/vue.min.js"></script>
+        <script type="text/javascript" src="~/lib/silviomoreto-bootstrap/bootstrap-select.js"></script>
+
+        <script type="text/javascript" src="~/js/src/utils.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/js/src/manager/script.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script type="text/javascript" src="~/js/dist/manager.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

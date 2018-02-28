@@ -1,0 +1,63 @@
+﻿
+@model KeyValuePair<AspNetUser,List<DDomainInterfaceOperation>>
+@{
+    var user = Model.Key;
+    var hasOperations = Model.Value;
+    var allPowers = (List<AuthorityModel>)ViewData["allAuthorities"];
+    var rolePowers= (List<DDomainInterfaceOperation>)ViewData["userRoleOperations"];
+    hasOperations.AddRange(rolePowers);
+    ViewData["disableOperations"] = ViewData["userRoleOperations"];
+    //var disableOperations = (List<DDomainInterfaceOperation>)ViewData["userRoleOperations"];
+    //var powers = (string[])ViewData["UserInterfaceAuthorities"];
+
+    ViewData["Title"] = $"设置用户权限：{user.UserName}";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div id="operations-container" class="panel-body">
+            @Html.Partial("Shared/Authorities", new KeyValuePair<List<DDomainInterfaceOperation>, List<AuthorityModel>>(hasOperations, allPowers))
+        </div>
+
+        <div class="hr-line-dashed"></div>
+        <button type="button" class="btn btn-primary ladda-button submit" data-style="expand-right">保存</button>
+    </div>
+</div>
+
+<div id="userName" class="hide">@user.UserName</div>
+
+@section scripts{
+    @Html.Partial("Shared/AuthoritiesScript")
+
+    <script type="text/javascript">
+
+        $('.submit').on('click', function () {
+            var operationIds = [];
+            var checkboxes = $('#operations-container').find('.i-checks:not(:disabled)');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (!$(checkboxes[i]).hasClass('chooseAll')&& $(checkboxes[i]).is(':checked')) {
+                    operationIds.push(parseInt($(checkboxes[i]).attr('data-operation-id')));
+                }
+            }
+
+            console.log(operationIds);
+            var loading = Ladda.create(this);
+            loading.start();
+            $.ajax({
+                url: "/Manage/AuthorityManage/UpdateUserAuthorities",
+                type: "post",
+                dataType: "json",
+                data: { userName: $('#userName').html(), operationIds: operationIds },
+                success: function (e) {
+                    utils.ShowSuccess("保存成功");
+                },
+                error: function (e) {
+                    utils.ShowAjaxError(e);
+                },
+                complete: function () {
+                    loading.stop();
+                }
+            });
+        });
+
+    </script>
+}
