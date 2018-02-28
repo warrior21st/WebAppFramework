@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GeoIp\WebApp.GeoIp.csproj" />
     <ProjectReference Include="..\GoogleAuthenticator\GoogleAuthenticator.csproj" />
     <ProjectReference Include="..\WebApp.DAL\WebApp.DAL.csproj" />
   </ItemGroup>
@@ -31,7 +32,7 @@
     <Folder Include="wwwroot\js\dist\" />
     <Folder Include="wwwroot\js\src\" />
     <Folder Include="wwwroot\less\" />
-    <Folder Include="Services\" />
+    <Folder Include="Resource\" />
   </ItemGroup>
 
 </Project>

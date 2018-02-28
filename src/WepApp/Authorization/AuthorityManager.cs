@@ -1,6 +1,6 @@
 ﻿using CommonHelpers.Helpers;
 using WebApp.DAL;
-using WebApp.Models.Authority;
+using WebApp.Models.Authorization;
 using WebApp.Models.Database;
 using WebApp.Models.Database.AspNet;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 #pragma warning disable 1591
-namespace WebApp.Authority
+namespace WebApp.Authorization
 {
     /// <summary>
     /// 权限管理器

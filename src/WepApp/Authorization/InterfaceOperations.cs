@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 #pragma warning disable 1591
-namespace WebApp.Authority
+namespace WebApp.Authorization
 {          
     /// <summary>
     /// 角色权限

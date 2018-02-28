@@ -6,7 +6,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using WebApp.Models.Authority;
+using WebApp.Models.Authorization;
 
 namespace WebApp.Helpers
 {

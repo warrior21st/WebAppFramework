@@ -11,9 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authority\" />
+    <Folder Include="Authorization\" />
     <Folder Include="Database\Base\" />
     <Folder Include="Database\AspNet\" />
+    <Folder Include="ManageUser\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using WebApp.Models.Database;
 using System.ComponentModel;
-using WebApp.Models.Authority;
+using WebApp.Models.Authorization;
 
-namespace WebApp.Authority
+namespace WebApp.Authorization
 {
     /// <summary>
     /// 权限数据初始化类

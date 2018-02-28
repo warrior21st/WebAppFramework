@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WebApp.Models.Authority
+namespace WebApp.Models.Authorization
 {
     /// <summary>
     /// 权限模型

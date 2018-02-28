@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WebApp.Models.Authority
+namespace WebApp.Models.Authorization
 {
     /// <summary>
     /// 接口操作模型

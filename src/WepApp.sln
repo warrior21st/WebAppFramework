@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonHelpers", "CommonHelp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleAuthenticator", "GoogleAuthenticator\GoogleAuthenticator.csproj", "{A0BB6C69-E138-4E4A-8AC4-49A0CA5B9164}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.GeoIp", "GeoIp\WebApp.GeoIp.csproj", "{16CF65EF-8FF6-401C-A937-4EE0A000AC44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A0BB6C69-E138-4E4A-8AC4-49A0CA5B9164}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0BB6C69-E138-4E4A-8AC4-49A0CA5B9164}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0BB6C69-E138-4E4A-8AC4-49A0CA5B9164}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16CF65EF-8FF6-401C-A937-4EE0A000AC44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16CF65EF-8FF6-401C-A937-4EE0A000AC44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16CF65EF-8FF6-401C-A937-4EE0A000AC44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16CF65EF-8FF6-401C-A937-4EE0A000AC44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

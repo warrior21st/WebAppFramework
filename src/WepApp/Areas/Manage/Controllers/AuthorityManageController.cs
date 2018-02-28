@@ -1,8 +1,7 @@
-﻿using WebApp.Authority;
+﻿using WebApp.Authorization;
 using WebApp.DAL;
 using WebApp.Models.Database;
 using WebApp.Models.Database.AspNet;
-using WebApp.Models.ManageUser;
 using WebApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApp.Models.ManageUser;
+using WebApp.Models.Database;
 
 namespace WebApp.Areas.Manage.Controllers
 {
@@ -217,7 +218,7 @@ namespace WebApp.Areas.Manage.Controllers
             ViewData["allAuthorities"] = _authorityService.GetAllAuthorityModels();
             ViewData["userRoleOperations"] = _authorityService.GetAuthoritiesByAuthorityId(roleAuthId);
 
-            return View(new KeyValuePair<AspNetUser, List<DDomainInterfaceOperation>>(user, operations));
+            return View(new KeyValuePair<AspNetUser, List<InterfaceOperation>>(user, operations));
         }
 
         /// <summary>
@@ -260,7 +261,7 @@ namespace WebApp.Areas.Manage.Controllers
             var shouldAddIds = operationIds.Where(x => !existedIds.Contains(x)).ToList();
             foreach (var id in shouldAddIds)
             {
-                var model = new DDomainAuthority();
+                var model = new Authority();
                 model.AuthorityId = authorityId;
                 model.CreateTime = DateTime.UtcNow;
                 model.LastUpdate = DateTime.UtcNow;

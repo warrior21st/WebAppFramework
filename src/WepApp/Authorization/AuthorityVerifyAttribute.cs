@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 #pragma warning disable 1591
-namespace WebApp.Authority
+namespace WebApp.Authorization
 {
     /// <summary>
     /// 权限验证

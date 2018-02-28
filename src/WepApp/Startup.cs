@@ -24,6 +24,7 @@ namespace WebApp
             services.AddMvc();
 
             services.AddDALByEfCore(Configuration);
+            services.AddGepIp($"/wwwroot{Configuration["GeoIp:CityFileUri"]}");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
