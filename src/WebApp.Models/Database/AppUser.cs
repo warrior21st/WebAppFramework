@@ -17,6 +17,18 @@ namespace WebApp.Models.Database
         [MaxLength(255)]
         public string PasswordHash { get; set; }
 
+        [MaxLength(255)]
+        public string PhoneNumber { get; set; }
+
+        [MaxLength(255)]
+        public string MailAddress { get; set; }
+
+        [MaxLength(255)]
+        public string IdCardNumber { get; set; }
+
+        [MaxLength(255)]
+        public string IdCardImageUri { get; set; }
+
         /// <summary>
         /// 别名
         /// </summary>

@@ -1,7 +1,6 @@
-﻿using DDomain.DAL.Helpers;
-using DDomain.Models;
-using DDomain.Models.Database;
-using Microsoft.AspNetCore.Authorization;
+﻿using WebApp.DAL.Helpers;
+using WebApp.Models;
+using WebApp.Models.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,11 +10,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApp.DAL;
 using WebApp.Authorization;
+using WebApp.Areas.Manage.Attributes;
 
 namespace WebApp.Areas.Manage.Controllers
 {
     [Area("Manage")]
-    [Authorize]
+    [ManageAuthorize]
     public class AppUsersController : ManageBaseController
     {
         public AppUsersController(ILogger<AppUsersController> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
@@ -32,8 +32,8 @@ namespace WebApp.Areas.Manage.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet]
-        [AuthorityVerify(nameof(ManageConsumer), ManageConsumer.READ)]
-        public async Task<IActionResult> List(string search, string sort = "CreateTime", string order = QueryOptions.ORDER_DESC, int pageIndex = 1, int pageSize = PagingModel.MIN_PAGE_SIZE)
+        [AuthorityVerify(nameof(ManageAppUser), ManageAppUser.READ)]
+        public async Task<IActionResult> List(string search, string sort = null, string order = null, int pageIndex = 1, int pageSize = PagingModel.MIN_PAGE_SIZE)
         {
             var list = new List<AppUser>();
             var walletCounts = new List<dynamic>();
@@ -44,19 +44,19 @@ namespace WebApp.Areas.Manage.Controllers
             paging.Total = query.Count();
             if (paging.Total > 0)
             {
+                if (string.IsNullOrWhiteSpace(sort))
+                {
+                    sort = "CreateTime";
+                    order = QueryOptions.ORDER_DESC;
+                }
                 var options = new QueryOptions(sort, order, paging.Start, paging.Limit);
-                if (EntityHelper.HasColumn<DDomainGoods>(options.SortColumn))
-                    query = query.AddOrderBy(options.SortColumn, options.Order);
-
                 list = query.Skip(options.Start).Take(options.Limit).ToList();
 
                 walletCounts = await DbContext.QueryDynamicListBySqlAsync($"SELECT Uid AS Id,COUNT(1) AS Count FROM DDomainEthAccount WHERE Uid IN ({list.Select(x => x.Id).ToList().GetSqlConditionString()}) GROUP BY Uid");
             }
 
             ViewData["paging"] = paging;
-            ViewData["tokens"] = DbContext.PayTokens.ToList();
             ViewData["walletCounts"] = walletCounts;
-            ViewData["languages"] = DbContext.Languages.ToList();
 
             return View(list);
         }
@@ -67,7 +67,7 @@ namespace WebApp.Areas.Manage.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        [AuthorityVerify(nameof(ManageConsumer), ManageConsumer.READ)]
+        [AuthorityVerify(nameof(ManageAppUser), ManageAppUser.READ)]
         public IActionResult Detail(int id)
         {
             if (id <= 0)
@@ -75,8 +75,7 @@ namespace WebApp.Areas.Manage.Controllers
             var user = DbContext.AppUsers.SingleOrDefault(x => x.Id == id);
             if (user == null)
                 return JsonBusinessErrorResult("id不存在或已被删除");
-            var wallets = DbContext.EthAccounts.Where(x => x.Uid == id).ToList();
-            ViewData["wallets"] = wallets;
+
             return View(user);
         }
 
@@ -91,10 +90,10 @@ namespace WebApp.Areas.Manage.Controllers
         /// <returns></returns>
         [HttpGet]
         [AuthorityVerify(nameof(ManageAppLoginLog), ManageAppLoginLog.READ)]
-        public IActionResult LoginLogs(int id = 0, string sort = "CreateTime", string order = QueryOptions.ORDER_DESC, int pageIndex = 1, int pageSize = PagingModel.MIN_PAGE_SIZE)
+        public IActionResult LoginLogs(int id = 0, string sort = null, string order = null, int pageIndex = 1, int pageSize = PagingModel.MIN_PAGE_SIZE)
         {
-            var list = new List<DDomainAppLoginLog>();
-            var appUsers = new List<DDomainAppUser>();
+            var list = new List<AppLoginLog>();
+            var appUsers = new List<AppUser>();
             var paging = GetCommonPagingModel(null, sort, order, pageIndex, pageSize);
             var query = DbContext.AppLoginLogs.Where(x => 1 == 1);
             if (id > 0)
@@ -102,8 +101,13 @@ namespace WebApp.Areas.Manage.Controllers
             paging.Total = query.Count();
             if (paging.Total > 0)
             {
+                if(string.IsNullOrWhiteSpace(sort))
+                {
+                    sort = "CreateTime";
+                    order = QueryOptions.ORDER_DESC;
+                }
                 var options = new QueryOptions(sort, order, paging.Start, paging.Limit);
-                if (EntityHelper.HasColumn<DDomainAppLoginLog>(options.SortColumn))
+                if (EntityHelper.HasColumn<AppLoginLog>(options.SortColumn))
                     query = query.AddOrderBy(options.SortColumn, options.Order);
 
                 list = query.Skip(options.Start).Take(options.Limit).ToList();

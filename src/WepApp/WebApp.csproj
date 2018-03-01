@@ -16,14 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GeoIp\WebApp.GeoIp.csproj" />
+    <ProjectReference Include="..\Geolocation\Geolocation.csproj" />
     <ProjectReference Include="..\GoogleAuthenticator\GoogleAuthenticator.csproj" />
     <ProjectReference Include="..\WebApp.DAL\WebApp.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Manage\Controllers\" />
-    <Folder Include="Areas\Manage\Views\" />
     <Folder Include="Controllers\Base\" />
     <Folder Include="Extensions\" />
     <Folder Include="Helpers\" />

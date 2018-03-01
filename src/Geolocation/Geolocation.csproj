@@ -12,6 +12,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonHelpers\CommonHelpers.csproj" />
-    <ProjectReference Include="..\WebApp.Models\WebApp.Models.csproj" />
   </ItemGroup>
 </Project>

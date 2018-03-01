@@ -3,37 +3,34 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using WebApp.Models.Database.Base;
 
 namespace WebApp.Models.Database.AspNet
 {
-    public class AspNetUser : IdentityUser<string>
+    public class AspNetUser:BaseUpdateEntity
     {
-        public AspNetUser()
-        {
-            Id = Guid.NewGuid().ToString();
-            AuthorityId = Guid.NewGuid().ToString();
-        }
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        [MaxLength(255)]
+        public string UserName { get; set; }
 
         /// <summary>
-        /// 最后登陆时间
+        /// 密码
         /// </summary>
-        public DateTime LastLoginTime { get; set; }
-
-        /// <summary>
-        /// 登陆强制要求手机验证
-        /// </summary>
-        public bool LoginVerifyPhoneNumber { get; set; }
-
-        /// <summary>
-        /// 是否禁用
-        /// </summary>
-        public bool IsDisabled { get; set; }
+        [MaxLength(255)]
+        public string PasswordHash { get; set; }
 
         /// <summary>
         /// 谷歌认证器secretkey
         /// </summary>
-        [MaxLength(127)]
-        public string GoogleAuthenticatorSecretKey { get; set; }
+        [MaxLength(255)]
+        public string GoogleAuthSecretKey { get; set; }
+
+        /// <summary>
+        /// 是否开启谷歌验证
+        /// </summary>
+        public bool GooleAuthEnabled { get; set; }
 
         /// <summary>
         /// 权限标识
@@ -42,8 +39,13 @@ namespace WebApp.Models.Database.AspNet
         public string AuthorityId { get; set; }
 
         /// <summary>
-        /// 创建时间
+        /// 是否禁用
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public bool IsDisabled { get; set; }
+
+        /// <summary>
+        /// 最后登陆时间
+        /// </summary>
+        public DateTime LastLoginTime { get; set; }
     }
 }

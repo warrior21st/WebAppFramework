@@ -1,4 +1,4 @@
-﻿using WebApp.GeoIp;
+﻿using Geolocation;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -11,7 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IServiceCollection AddGepIp(this IServiceCollection services, string dbFileUri)
+        public static IServiceCollection AddGeplocation(this IServiceCollection services, string dbFileUri)
         {
             if (services == null)
                 throw new ArgumentNullException(nameof(services));

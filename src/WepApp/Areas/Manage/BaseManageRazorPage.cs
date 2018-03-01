@@ -1,14 +1,11 @@
-﻿using DDomain.Caching.Language;
-using DDomain.Models;
-using DDomain.Models.Language;
+﻿using WebApp.Models;
 using Microsoft.AspNetCore.Mvc.Razor;
-using NGettext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DDomain.Areas.Manage
+namespace WebApp.Areas.Manage
 {
     public abstract class BaseManageRazorPage<TModel> : RazorPage<TModel>
     {

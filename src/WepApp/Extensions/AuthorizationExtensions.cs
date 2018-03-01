@@ -5,6 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApp.Models.Database;
+using CommonHelpers.Helpers;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using WebApp.Models.Database.AspNet;
+using Microsoft.AspNetCore.Identity;
 
 namespace Microsoft.AspNetCore.Http
 {
@@ -89,47 +95,157 @@ namespace Microsoft.AspNetCore.Http
             context.Items[LOG_OPERATION_NAME_KEY] = operationName;
         }
 
+        /// <summary>
+        /// 管理用户是否已登录
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static bool ManageIsLogin(this HttpContext context)
+        {
+            return !string.IsNullOrWhiteSpace(context.Session.GetString(USER_LOGIN_SESSION_NAME));
+        }
+
+        /// <summary>
+        /// 管理用户登入
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="uid"></param>
+        /// <param name="userName"></param>
+        public static void ManageSignIn(this HttpContext context, int uid, string userName)
+        {
+            context.SignInBySession(USER_LOGIN_SESSION_NAME, uid, userName);
+        }
+
+        /// <summary>
+        /// 管理用户登出
+        /// </summary>
+        /// <param name="context"></param>
+        public static void ManageSignOut(this HttpContext context)
+        {
+            context.SignOutBySession(USER_LOGIN_SESSION_NAME);
+        }
+
+        /// <summary>
+        /// 获取管理用户
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static AspNetUser GetManageLoginUser(this HttpContext context)
+        {
+            AspNetUser user = null;
+            if (context.AppIsLogin())
+            {
+                var infoStr = DataHelper.UnProtect(context.Session.GetString(USER_LOGIN_SESSION_NAME));
+                var arr = infoStr.Split(Environment.NewLine.ToArray());
+                user = new AspNetUser();
+                user.Id = int.Parse(arr[0]);
+                user.UserName = arr.Length > 1 ? arr[1] : null;
+            }
+
+            return user;
+        }
+
+        /// <summary>
+        /// 业务用户是否已登录
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static bool AppIsLogin(this HttpContext context)
         {
-            return context.Session.TryGetValue(USER_LOGIN_SESSION_NAME, out var bytes);
+            return context.User != null && context.User.Identity != null && !string.IsNullOrWhiteSpace(context.User.Identity.Name);
         }
 
-        public static void AppSignIn(this HttpContext context, AppUser user)
+        /// <summary>
+        /// 业务登入
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="uid"></param>
+        /// <param name="aliasName"></param>
+        /// <param name="isPersistent"></param>
+        public static void AppSignIn(this HttpContext context, int uid, string aliasName, bool isPersistent)
         {
-            var infostr = GetUserInfoString(user);
-            context.Session.SetString(USER_LOGIN_SESSION_NAME, infostr);
+            Task.WaitAll(context.SignInByCookieAsync(uid, aliasName, isPersistent));
         }
 
+        /// <summary>
+        /// 业务登出
+        /// </summary>
+        /// <param name="context"></param>
         public static void AppSignOut(this HttpContext context)
         {
             if (context.AppIsLogin())
-                context.Session.Remove(USER_LOGIN_SESSION_NAME);
+                Task.WaitAll(context.SignOutByCookieAsync());
         }
 
+        /// <summary>
+        /// 获取业务用户
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static AppUser GetAppLoginUser(this HttpContext context)
         {
             AppUser user = null;
             if (context.AppIsLogin())
-                user = GetUserByUserInfoString(context.Session.GetString(USER_LOGIN_SESSION_NAME));
+            {
+                var infoStr = DataHelper.UnProtect(context.User.Identity.Name);
+                var arr = infoStr.Split(Environment.NewLine.ToArray());
+                user = new AppUser();
+                user.Id = int.Parse(arr[0]);
+                user.AliasName = arr.Length > 1 ? arr[1] : null;
+            }
 
             return user;
         }
 
-        private static string GetUserInfoString(AppUser user)
+        /// <summary>
+        /// 获取用户信息字符串
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="aliasName"></param>
+        /// <returns></returns>
+        private static string GetUserInfoString(int uid, string aliasName)
         {
-            var str = user.Id.ToString();
-            str += !string.IsNullOrWhiteSpace(user.AliasName) ? $"{Environment.NewLine}{user.AliasName}" : "";
-            return str;
+            var str = uid.ToString();
+            str += !string.IsNullOrWhiteSpace(aliasName) ? $"{Environment.NewLine}{aliasName}" : "";
+
+            return DataHelper.Protect(str);
         }
 
-        private static AppUser GetUserByUserInfoString(string str)
-        {
-            var arr = str.Split(Environment.NewLine.ToArray());
-            var user = new AppUser();
-            user.Id = int.Parse(arr[0]);
-            user.AliasName = arr.Length > 1 ? arr[1] : null;
+        #region cookie登入登出
 
-            return user;
+        private static async Task SignInByCookieAsync(this HttpContext context, int uid, string aliasName, bool isPersistent)
+        {
+            var info = GetUserInfoString(uid, aliasName);
+            var id = new ClaimsIdentity("authenticationType", "nameType", "roleType");
+            id.AddClaim(new Claim("idType", uid.ToString()));
+            id.AddClaim(new Claim("nameType", info));
+            var cp = new ClaimsPrincipal(id);
+            await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, cp, new AuthenticationProperties() { IsPersistent = isPersistent });
         }
+
+        private static async Task SignOutByCookieAsync(this HttpContext context)
+        {
+            await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await context.SignOutAsync(IdentityConstants.ApplicationScheme);
+            await context.SignOutAsync(IdentityConstants.ExternalScheme);
+            await context.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
+        }
+
+        #endregion
+
+        #region session登入登出
+
+        private static void SignInBySession(this HttpContext context, string sessionName, int uid, string userName)
+        {
+            context.Session.SetString(sessionName, GetUserInfoString(uid, userName));
+        }
+
+        private static void SignOutBySession(this HttpContext context, string sessionName)
+        {
+            if (!string.IsNullOrWhiteSpace(context.Session.GetString(sessionName)))
+                context.Session.Remove(sessionName);
+        }
+
+        #endregion
     }
 }

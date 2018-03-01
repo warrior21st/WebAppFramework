@@ -13,15 +13,12 @@ namespace Microsoft.Extensions.DependencyInjection
         /// 添加数据访问层，使用efcore
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="configuration"></param>
+        /// <param name="connectionString">连接字符串</param>
         /// <returns></returns>
-        public static IServiceCollection AddDALByEfCore(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDALByEfCore(this IServiceCollection services, string connectionString)
         {
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
-
-            //添加数据连接
-            string connectionString = configuration.GetSection("AppSettings")["ConnectionString"];
 
             //Add framework services.
             //Pomelo.EntityFrameworkCore.MySql

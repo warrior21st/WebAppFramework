@@ -21,7 +21,7 @@ namespace WebApp.Authorization
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
-        public static async Task InitInterfaceOperations(IServiceProvider serviceProvider)
+        public static async Task InitInterfaceOperations(IServiceProvider serviceProvider, AppDbContext context)
         {
             var baseType = typeof(IManageInterface);
             Assembly assembly = baseType.GetTypeInfo().Assembly;
@@ -31,7 +31,6 @@ namespace WebApp.Authorization
 
             if (types != null && types.Count > 0)
             {
-                var context = serviceProvider.GetService<AppDbContext>();
                 var existInterfaceNames = context.InterfaceOperations.Where(x => x.ParentName == null).Select(x => x.Name).ToList();
                 var existOpers = await context.QueryListBySqlAsync<InterfaceOperationModel>(AuthorityManager.GET_ALL_OPERATION_SQL);
                 foreach (var t in types)
@@ -82,7 +81,7 @@ namespace WebApp.Authorization
                                     list.Insert(2, oper);
                                 else
                                     list.Add(oper);
-                            }                            
+                            }
                         }
                     }
                     if (list.Count > 0)

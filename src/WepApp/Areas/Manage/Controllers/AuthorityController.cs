@@ -3,7 +3,6 @@ using WebApp.DAL;
 using WebApp.Models.Database;
 using WebApp.Models.Database.AspNet;
 using WebApp.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,19 +11,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApp.Models.ManageUser;
-using WebApp.Models.Database;
+using WebApp.Areas.Manage.Attributes;
 
 namespace WebApp.Areas.Manage.Controllers
 {
     [Area("Manage")]
-    [Authorize]
-    public class AuthorityManageController : ManageBaseController
+    [ManageAuthorize]
+    public class AuthorityController : ManageBaseController
     {
         private readonly AuthorityService _authorityService;
         private readonly UserManager<AspNetUser> _userManager;
         private readonly AuthorityManager _authenticator;
 
-        public AuthorityManageController(ILogger<AuthorityManageController> logger, IServiceProvider serviceProvider,
+        public AuthorityController(ILogger<AuthorityController> logger, IServiceProvider serviceProvider,
             AuthorityService authorityService,
             UserManager<AspNetUser> userManager,
             AuthorityManager authenticator) : base(logger, serviceProvider)
@@ -129,7 +128,7 @@ namespace WebApp.Areas.Manage.Controllers
         private async Task<JsonResult> AddOrUpdateUser(string role, AspNetUser user)
         {
             var oldUser = new AspNetUser();
-            if (!string.IsNullOrWhiteSpace(user.Id))
+            if (user.Id <= 0)
                 oldUser = DbContext.Users.Single(x => x.Id == user.Id);
             else
             {
@@ -137,15 +136,13 @@ namespace WebApp.Areas.Manage.Controllers
                 oldUser.AuthorityId = Guid.NewGuid().ToString();
                 oldUser.UserName = user.UserName;
             }
-            oldUser.Email = user.Email;
-            oldUser.PhoneNumber = user.PhoneNumber;
+
             oldUser.IsDisabled = user.IsDisabled;
-            oldUser.TwoFactorEnabled = user.TwoFactorEnabled;
 
             if (DbContext.Users.Count(x => x.UserName == oldUser.UserName && x.Id != oldUser.Id) > 0)
                 return JsonBusinessErrorResult("用户名已被使用");
 
-            if (string.IsNullOrWhiteSpace(user.Id))
+            if (user.Id <= 0)
             {
                 var res = await _userManager.CreateAsync(oldUser, user.PasswordHash);
                 if (!res.Succeeded)
@@ -177,7 +174,7 @@ namespace WebApp.Areas.Manage.Controllers
         /// <returns></returns>
         [HttpPost]
         [AuthorityVerify(nameof(ManageUser), ManageUser.DELETE)]
-        public async Task<JsonResult> DeleteUsers(List<string> ids)
+        public async Task<JsonResult> DeleteUsers(List<int> ids)
         {
             if (ids == null || ids.Count == 0)
                 return JsonParamsErrorResult(nameof(ids));

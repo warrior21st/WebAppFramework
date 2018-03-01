@@ -26,6 +26,26 @@ namespace WebApp.Authorization
         public const string WRITE = "write";
     }
 
+    [InterfaceGroup("业务用户管理", "用户列表")]
+    public struct ManageAppUser : IManageInterface
+    {
+        /// <summary>
+        /// 读取
+        /// </summary>
+        [Description("读取")]
+        public const string READ = "read";
+    }
+
+    [InterfaceGroup("业务用户管理", "登录日志")]
+    public struct ManageAppLoginLog : IManageInterface
+    {
+        /// <summary>
+        /// 读取
+        /// </summary>
+        [Description("读取")]
+        public const string READ = "read";
+    }
+
     /// <summary>
     /// 用户管理
     /// </summary>

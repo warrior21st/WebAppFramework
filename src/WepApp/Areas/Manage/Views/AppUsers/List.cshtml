@@ -1,6 +1,6 @@
 ﻿@using CommonHelpers.Helpers
 
-@model List<DDomainAppUser>
+@model List<AppUser>
 
 @{
     Layout = "_ManageLayout";
@@ -8,9 +8,6 @@
     ViewData["container-css"] = "col-lg-12";
     var list = Model;
     var paging = (PagingModel)ViewData["paging"];
-    var tokens = (List<DDomainPayToken>)ViewData["tokens"];
-    var languages = (List<DDomainLanguage>)ViewData["languages"];
-    var walletCounts = (List<dynamic>)ViewData["walletCounts"];
 }
 
 @section search{
@@ -26,13 +23,6 @@
                     <th>昵称</th>
                     <th>手机</th>
                     <th>邮箱</th>
-                    <th class="text-center">偏好语言</th>
-                    @{
-                        foreach (var token in tokens)
-                        {
-                            <th class="text-right">@($"{token.TokenSymbol}余额")</th>
-                        }
-                    }
                     <th class="text-right">绑定钱包数</th>
                     <th class="datetime-td-fixed-width text-right">最后登录时间</th>
                     <th class="datetime-td-fixed-width text-right">创建时间</th>

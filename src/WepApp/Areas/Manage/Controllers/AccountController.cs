@@ -19,6 +19,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApp.Areas.Manage.Controllers
 {
@@ -78,17 +79,17 @@ namespace WebApp.Areas.Manage.Controllers
             var res = await _signInManager.CheckPasswordSignInAsync(user, password, false);
             if (!res.Succeeded)
                 return JsonBusinessErrorResult("验证失败");
-            if (user.TwoFactorEnabled)
+            if (user.GooleAuthEnabled)
             {
                 HttpContext.Session.Set("userName", Encoding.UTF8.GetBytes(user.UserName));
                 HttpContext.Session.Set("rememberMe", new byte[] { Convert.ToByte(rememberMe) });
             }
             else
             {
-               await SignInAsync(user, rememberMe);
+                await SignInAsync(user, rememberMe);
             }
 
-            return JsonSuccessResult(new { twoFactorEnabled = user.TwoFactorEnabled });
+            return JsonSuccessResult(new { twoFactorEnabled = user.GooleAuthEnabled });
         }
 
         /// <summary>
@@ -96,12 +97,9 @@ namespace WebApp.Areas.Manage.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-            await HttpContext.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
-
+            HttpContext.ManageSignOut();
             return RedirectToAction(nameof(Login));
         }
 
@@ -127,14 +125,14 @@ namespace WebApp.Areas.Manage.Controllers
                 return JsonBusinessErrorResult("会话已超时，请重新登录");
             var user = DbContext.Users.SingleOrDefault(x => x.UserName == Encoding.UTF8.GetString(userNameBytes));
 
-            if (string.IsNullOrWhiteSpace(user.GoogleAuthenticatorSecretKey))
+            if (string.IsNullOrWhiteSpace(user.GoogleAuthSecretKey))
             {
-                user.GoogleAuthenticatorSecretKey = GoogleAuthenticatorHelper.GenerateNewGoogleAuthenticatorSecretKey();
+                user.GoogleAuthSecretKey = GoogleAuthenticatorHelper.GenerateNewGoogleAuthenticatorSecretKey();
                 DbContext.Update(user);
                 await DbContext.SaveChangesAsync();
             }
 
-            var qrcodeUrl = GoogleAuthenticatorHelper.GetAuthenticatorUrl(user.GoogleAuthenticatorSecretKey,user.UserName, _configuration["SiteConfig:AppName"]);
+            var qrcodeUrl = GoogleAuthenticatorHelper.GetAuthenticatorUrl(user.GoogleAuthSecretKey, user.UserName, _configuration["SiteConfig:AppName"]);
 
             return JsonSuccessResult(qrcodeUrl);
         }
@@ -168,7 +166,7 @@ namespace WebApp.Areas.Manage.Controllers
             if (user.IsDisabled)
                 return JsonBusinessErrorResult("用户已被禁用");
 
-            var b = GoogleAuthenticatorHelper.ValidateGoogleAuthenticatorToken(user.GoogleAuthenticatorSecretKey, token);
+            var b = GoogleAuthenticatorHelper.ValidateGoogleAuthenticatorToken(user.GoogleAuthSecretKey, token);
             if (!b)
                 return JsonBusinessErrorResult("验证失败");
 

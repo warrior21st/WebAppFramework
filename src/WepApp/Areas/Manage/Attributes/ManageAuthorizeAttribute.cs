@@ -6,36 +6,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApp.Models.Database;
+using WebApp.Attributes;
 
-namespace WebApp.Attributes
+namespace WebApp.Areas.Manage.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    public class AppAuthorizeAttribute : Attribute, IAuthorizationFilter
+    public class ManageAuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         private readonly ActionResultTypes _resultType;
 
-        public AppAuthorizeAttribute()
+        public ManageAuthorizeAttribute()
         {
             _resultType = ActionResultTypes.ViewResult;
         }
 
-        public AppAuthorizeAttribute(ActionResultTypes resultType)
+        public ManageAuthorizeAttribute(ActionResultTypes resultType)
         {
             _resultType = resultType;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-#if DEBUG
-            if (!context.HttpContext.AppIsLogin())
-                context.HttpContext.AppSignIn(2, "debugger", true);
-#endif
-
-            if (!context.HttpContext.AppIsLogin())
+            if (!context.HttpContext.ManageIsLogin())
             {
                 if (_resultType == ActionResultTypes.ViewResult)
-                    context.Result = new RedirectResult($"/login?returnUrl={context.HttpContext.Request.Path.Value}");
+                    context.Result = new RedirectResult($"/Manage/Account/Login?returnUrl={context.HttpContext.Request.Path.Value}");
                 else if (_resultType == ActionResultTypes.JsonResult)
                     context.Result = new JsonResult(null) { StatusCode = StatusCodes.Status401Unauthorized };
             }

@@ -1,14 +1,14 @@
-@using DDomain.Helpers
-@using DDomain.Models
-@using DDomain.Models.Database
-@using DDomain.Models.Database.AspNet
-@using DDomain.Models.View
+@using WebApp
+@using WebApp.Helpers
+@using WebApp.Models
+@using WebApp.Models.Database
+@using WebApp.Models.Database.AspNet
+@using WebApp.Models.View
+@using WebApp.Models.Authorization
+@using WebApp.Authorization
 @using Newtonsoft.Json
-@using DDomain
 @using CommonHelpers.Helpers
-@using DDomain.Models.Auth
-@using DDomain.Areas.Manage.Authority
 
-@inherits DDomain.Areas.Manage.BaseManageRazorPage<TModel>
+@inherits WebApp.Areas.Manage.BaseManageRazorPage<TModel>
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

@@ -1,14 +1,14 @@
 ﻿using CommonHelpers.Helpers;
-using WebApp.Models.ClientInfo;
 using MaxMind.GeoIP2;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 #pragma warning disable 1591
-namespace WebApp.GeoIp
+namespace Geolocation
 {
     /// <summary>
     /// geoip实现

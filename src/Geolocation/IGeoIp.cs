@@ -1,11 +1,10 @@
-﻿using WebApp.Models.ClientInfo;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 #pragma warning disable 1591
-namespace WebApp.GeoIp
+namespace Geolocation
 {
     /// <summary>
     /// geoip接口

@@ -4,16 +4,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using WebApp.Models.Database.Base;
 
 namespace WebApp.Models.Database.AspNet
 {
-    public class AspNetRole : IdentityRole<string>
+    public class AspNetRole : BaseUpdateEntity
     {
-        public AspNetRole()
-        {
-            Id = Guid.NewGuid().ToString();
-            AuthorityId = Guid.NewGuid().ToString();
-        }
+        /// <summary>
+        /// 名称
+        /// </summary>
+        [MaxLength(255)]
+        public string Name { get; set; }
 
         /// <summary>
         /// 别名

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
 
-namespace WebApp.GeoIp
+namespace Geolocation
 {
     /// <summary>
     /// geoip选项
