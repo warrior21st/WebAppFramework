@@ -43,7 +43,6 @@ namespace WebApp.Authorization
                             var model = new InterfaceOperation()
                             {
                                 CreateTime = DateTime.UtcNow,
-                                LastUpdate = DateTime.UtcNow,
                                 Name = t.Name,
                                 GroupName = groupDesc.GroupName,
                                 Description = groupDesc.Description,
@@ -67,7 +66,6 @@ namespace WebApp.Authorization
                                 var oper = new InterfaceOperation()
                                 {
                                     CreateTime = DateTime.UtcNow,
-                                    LastUpdate = DateTime.UtcNow,
                                     ParentName = t.Name,
                                     GroupName = groupDesc.GroupName,
                                     Description = desc.Description,

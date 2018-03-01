@@ -21,25 +21,25 @@ namespace WebApp.Models.Database.AspNet
         /// 登录者ip
         /// </summary>
         [MaxLength(50)]
-        public string ClientIp { get; set; }
+        public string Ip { get; set; }
 
         /// <summary>
         /// 登录者所在国家
         /// </summary>
         [MaxLength(255)]
-        public string ClientCountry { get; set; }
+        public string Country { get; set; }
 
         /// <summary>
-        /// 登录者所在省
+        /// 登录者所在省/州
         /// </summary>
         [MaxLength(255)]
-        public string ClientProvince { get; set; }
+        public string Province { get; set; }
 
         /// <summary>
         /// 登录者所在城市
         /// </summary>
         [MaxLength(255)]
-        public string ClientCity { get; set; }
+        public string City { get; set; }
 
         /// <summary>
         /// 登录者useragent

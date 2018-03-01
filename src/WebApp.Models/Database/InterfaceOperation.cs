@@ -11,7 +11,7 @@ namespace WebApp.Models.Database
     /// 接口操作表
     /// </summary>
     [Table("InterfaceOperation")]
-    public class InterfaceOperation : BaseUpdateEntity
+    public class InterfaceOperation : BaseEntity
     {
         /// <summary>
         /// 所属组

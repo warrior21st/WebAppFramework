@@ -11,7 +11,7 @@ namespace WebApp.Models.Database
     /// 权限表
     /// </summary>
     [Table("Authority")]
-    public class Authority:BaseUpdateEntity
+    public class Authority:BaseEntity
     {
         /// <summary>
         /// 权限标识

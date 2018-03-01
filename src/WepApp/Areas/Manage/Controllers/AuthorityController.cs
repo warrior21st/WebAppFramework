@@ -261,7 +261,6 @@ namespace WebApp.Areas.Manage.Controllers
                 var model = new Authority();
                 model.AuthorityId = authorityId;
                 model.CreateTime = DateTime.UtcNow;
-                model.LastUpdate = DateTime.UtcNow;
                 model.OperationId = id;
 
                 DbContext.Authorities.Add(model);

@@ -22,7 +22,7 @@ namespace WebApp.Authorization
         private readonly UserManager<AspNetUser> _userManager;
 
         public const string GET_ALL_OPERATION_SQL = @"SELECT b.Id,a.Name AS InterfaceName,b.Name AS OperationName 
-                            FROM(SELECT Id, NAME FROM `ddomaininterfaceoperation` WHERE ParentName IS NULL) a,ddomaininterfaceoperation b WHERE a.Name = b.ParentName";
+                            FROM(SELECT Id, NAME FROM `interfaceoperation` WHERE ParentName IS NULL) a,interfaceoperation b WHERE a.Name = b.ParentName";
 
         public AuthorityManager(AppDbContext context, UserManager<AspNetUser> userManager)
         {

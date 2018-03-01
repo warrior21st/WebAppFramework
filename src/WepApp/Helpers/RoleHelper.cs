@@ -21,10 +21,10 @@ namespace WebApp.Helpers
         {
             List<AspNetRole> roles = new List<AspNetRole>();
 
-            roles.Add(new AspNetRole() { Name = nameof(RoleTypes.Admin), AliasName =EnumHelper.GetEnumDescription(RoleTypes.Admin), AuthorityId = Guid.NewGuid().ToString() });
-            roles.Add(new AspNetRole() { Name = nameof(RoleTypes.Manager), AliasName = EnumHelper.GetEnumDescription(RoleTypes.Manager), AuthorityId = Guid.NewGuid().ToString() });
-            roles.Add(new AspNetRole() { Name = nameof(RoleTypes.Operational), AliasName = EnumHelper.GetEnumDescription(RoleTypes.Operational), AuthorityId = Guid.NewGuid().ToString() });
-            roles.Add(new AspNetRole() { Name = nameof(RoleTypes.User), AliasName = EnumHelper.GetEnumDescription(RoleTypes.User), AuthorityId = Guid.NewGuid().ToString() });
+            roles.Add(new AspNetRole() { Name = nameof(RoleTypes.Admin), AliasName =EnumHelper.GetEnumDescription(RoleTypes.Admin), AuthorityId = Guid.NewGuid().ToString("N") });
+            roles.Add(new AspNetRole() { Name = nameof(RoleTypes.Manager), AliasName = EnumHelper.GetEnumDescription(RoleTypes.Manager), AuthorityId = Guid.NewGuid().ToString("N") });
+            roles.Add(new AspNetRole() { Name = nameof(RoleTypes.Operational), AliasName = EnumHelper.GetEnumDescription(RoleTypes.Operational), AuthorityId = Guid.NewGuid().ToString("N") });
+            roles.Add(new AspNetRole() { Name = nameof(RoleTypes.User), AliasName = EnumHelper.GetEnumDescription(RoleTypes.User), AuthorityId = Guid.NewGuid().ToString("N") });
 
             return roles;
         }

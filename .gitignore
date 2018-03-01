@@ -297,3 +297,5 @@ __pycache__/
 /src/WebApp/wwwroot/lib/phone-country-codes/dist/areacodes.css
 /src/WebApp/wwwroot/lib/phone-country-codes/dist/areacodes.min.js
 /src/WebApp/wwwroot/style/manager.min.css
+/src/WepApp/wwwroot/css/dist
+/src/WepApp/wwwroot/js/dist

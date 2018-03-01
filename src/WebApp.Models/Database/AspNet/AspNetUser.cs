@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using WebApp.Models.Database.Base;
 
 namespace WebApp.Models.Database.AspNet
 {
+    [Table("AspNetUser")]
     public class AspNetUser:BaseUpdateEntity
     {
         /// <summary>

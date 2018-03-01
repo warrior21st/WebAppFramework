@@ -11,6 +11,7 @@ namespace WebApp.Models.Database.AspNet
     /// <summary>
     /// 用户角色表
     /// </summary>
+    [Table("AspNetUserRole")]
     public class AspNetUserRole : BaseEntity
     {
         public int UserId { get; set; }

@@ -30,13 +30,19 @@ namespace WebApp.Models.Database
         public string UserAgent { get; set; }
 
         /// <summary>
-        /// 国家
+        /// 登录者所在国家
         /// </summary>
         [MaxLength(255)]
         public string Country { get; set; }
 
         /// <summary>
-        /// 城市
+        /// 登录者所在省/州
+        /// </summary>
+        [MaxLength(255)]
+        public string Province { get; set; }
+
+        /// <summary>
+        /// 登录者所在城市
         /// </summary>
         [MaxLength(255)]
         public string City { get; set; }

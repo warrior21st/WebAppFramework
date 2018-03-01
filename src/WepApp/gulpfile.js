@@ -5,218 +5,67 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 npm install --save-dev jshint gulp-jshint
 */
 
-var gulp = require('gulp'); 
+var gulp = require('gulp');
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglifyes'); 
+var uglify = require('gulp-uglifyes');
 var less = require("gulp-less");
 var pump = require('pump');
-var cleancss= require('gulp-clean-css');
+var cleancss = require('gulp-clean-css');
 
-gulp.task('default', ['css', 'js', 'assets', 'domains', 'login', 'order', 'personaldomains', 'settings', 'wallets', 'areacodescss', 'areacodesjs', 'googleauth',
-                      'findpwd']);
+gulp.task('default', ['css', 'js']);
 gulp.task('manager', ['managerjs', 'managercss']);
 
 gulp.task("css", function () {
     return gulp.src(
         [
-            'wwwroot/Less/site/ddomain.less',
-            'wwwroot/Less/font-awesome/less/font-awesome.less',
-            'wwwroot/Less/inspinia/inspinia.less',
+            'wwwroot/css/src/site.css'
         ])
-	 .pipe(less()) 
-	 .pipe(cleancss({compatibility: 'ie8'}))  
-	 .pipe(gulp.dest('wwwroot/style'))
-});
-
-gulp.task('js', function (cb) { 
-  pump([
-    gulp.src(
-     [
-            'wwwroot/js/src/language.js',
-            'wwwroot/js/src/utils.js',
-            'wwwroot/js/src/datetime.js',
-	        'wwwroot/js/src/tablesort.js',
-	        'wwwroot/js/src/personalleftnav.js',
-    ]), 
-    concat('ddomain.min.js'),
-    uglify({ 
-       mangle: false, 
-       ecma: 6 
-    }), 
-    gulp.dest('wwwroot/js/dist')
-  ], cb);
-}); 
-
-gulp.task('assets', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/js/src/assets.js'
-            ]),
-        concat('assets.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/js/dist')
-    ], cb);
-});
-
-gulp.task('domains', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/js/src/domains.js'
-            ]),
-        concat('domains.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/js/dist')
-    ], cb);
-});
-
-gulp.task('login', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/js/src/login.js'
-            ]),
-        concat('login.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/js/dist')
-    ], cb);
-});
-
-gulp.task('order', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/js/src/order.js'
-            ]),
-        concat('order.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/js/dist')
-    ], cb);
-});
-
-gulp.task('personaldomains', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/js/src/personaldomains.js'
-            ]),
-        concat('personaldomains.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/js/dist')
-    ], cb);
-});
-
-gulp.task('settings', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/js/src/settings.js'
-            ]),
-        concat('settings.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/js/dist')
-    ], cb);
-});
-
-gulp.task('wallets', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/js/src/wallets.js'
-            ]),
-        concat('wallets.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/js/dist')
-    ], cb);
-});
-
-gulp.task('googleauth', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/js/src/googleauth.js'
-            ]),
-        concat('googleauth.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/js/dist')
-    ], cb);
-});
-
-
-gulp.task('findpwd', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/js/src/findpwd.js'
-            ]),
-        concat('findpwd.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/js/dist')
-    ], cb);
-});
-
-gulp.task('areacodesjs', function (cb) {
-    pump([
-        gulp.src(
-            [
-                'wwwroot/lib/phone-country-codes/areacodes.js'
-            ]),
-        concat('areacodes.min.js'),
-        uglify({
-            mangle: false,
-            ecma: 6
-        }),
-        gulp.dest('wwwroot/lib/phone-country-codes/dist')
-    ], cb);
-});
-
-gulp.task("areacodescss", function () {
-    return gulp.src(
-        [
-            'wwwroot/lib/phone-country-codes/areacodes.css'
-        ])
+        .pipe(less())
         .pipe(cleancss({ compatibility: 'ie8' }))
-        .pipe(gulp.dest('wwwroot/lib/phone-country-codes/dist'))
+        .pipe(gulp.dest('wwwroot/css/dist'))
+});
+
+gulp.task('inspiniajs', function (cb) {
+    pump([
+        gulp.src(
+            [
+                'wwwroot/lib/inspinia/inspinia.js'
+            ]),
+        concat('inspinia.min.js'),
+        uglify({
+            mangle: false,
+            ecma: 6
+        }),
+        gulp.dest('wwwroot/lib/inspinia/')
+    ], cb);
+});
+
+gulp.task('js', function (cb) {
+    pump([
+        gulp.src(
+            [
+                'wwwroot/js/src/utils.js',
+                'wwwroot/js/src/site.js'
+            ]),
+        concat('site.min.js'),
+        uglify({
+            mangle: false,
+            ecma: 6
+        }),
+        gulp.dest('wwwroot/js/dist')
+    ], cb);
 });
 
 gulp.task("managercss", function () {
     return gulp.src(
         [
-            'wwwroot/style/manager/manager.css'
+            'wwwroot/css/src/manager/manager.css'
         ])
         .pipe(less())
         .pipe(cleancss({ compatibility: 'ie8' }))
-        .pipe(concat('manager.min.css'))  
-        .pipe(gulp.dest('wwwroot/style'))
+        .pipe(concat('manager.min.css'))
+        .pipe(gulp.dest('wwwroot/css/dist'))
 });
 
 gulp.task('managerjs', function (cb) {
@@ -251,7 +100,7 @@ gulp.task('managerjs', function (cb) {
     ], cb);
 });
 
-  
+
 gulp.task("watcher", function () {
-    gulp.watch(['wwwroot/Less/site/*.less', 'wwwroot/Less/font-awesome/*.less', 'wwwroot/Less/inspinia/*.less','wwwroot/js/src/*.js'], ['css','js']);
+    gulp.watch(['wwwroot/Less/site/*.less', 'wwwroot/Less/font-awesome/*.less', 'wwwroot/Less/inspinia/*.less', 'wwwroot/js/src/*.js'], ['css', 'js']);
 }); 
