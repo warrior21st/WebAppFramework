@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using CommonHelpers.Algorithm;
+using WebApp.DAL;
 
 namespace WebApp.Areas.Manage.Controllers
 {
@@ -55,7 +56,7 @@ namespace WebApp.Areas.Manage.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<JsonResult> LoginByPassword(string userName, string password, bool rememberMe)
+        public JsonResult LoginByPassword(string userName, string password, bool rememberMe)
         {
             if (string.IsNullOrWhiteSpace(userName))
                 return JsonParamsErrorResult(nameof(userName));
@@ -135,6 +136,7 @@ namespace WebApp.Areas.Manage.Controllers
         private void SignIn(AspNetUser user)
         {
             HttpContext.ManageSignIn(user.Id, user.UserName);
+            Task.WaitAll(DbContext.ExecuteNonQueryAsync($"UPDATE AspNetUser SET LastLoginTime='{DateTime.UtcNow}' WHERE Id={user.Id}"));
         }
 
         /// <summary>
