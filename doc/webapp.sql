@@ -107,11 +107,11 @@ CREATE TABLE `aspnetuser` (
   `CreateTime` datetime NOT NULL,
   `LastUpdate` datetime NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `aspnetuser` */
 
-insert  into `aspnetuser`(`Id`,`UserName`,`PasswordHash`,`GoogleAuthSecretKey`,`GooleAuthEnabled`,`AuthorityId`,`IsDisabled`,`LastLoginTime`,`CreateTime`,`LastUpdate`) values (1,'admin','21232F297A57A5A743894A0E4A801FC3',NULL,'\0','46596303ec804259b1870ff0c8b5238a','\0','0001-01-01 00:00:00','2018-03-01 10:04:27','2018-03-01 10:04:27');
+insert  into `aspnetuser`(`Id`,`UserName`,`PasswordHash`,`GoogleAuthSecretKey`,`GooleAuthEnabled`,`AuthorityId`,`IsDisabled`,`LastLoginTime`,`CreateTime`,`LastUpdate`) values (1,'admin','21232F297A57A5A743894A0E4A801FC3',NULL,'\0','46596303ec804259b1870ff0c8b5238a','\0','0001-01-01 00:00:00','2018-03-01 10:04:27','2018-03-01 10:04:27'),(2,'test','098F6BCD4621D373CADE4E832627B4F6',NULL,'\0','d5bf774e-63d1-4147-8e11-319fc1ac26ef','','0001-01-01 00:00:00','2018-03-02 13:43:50','0001-01-01 00:00:00');
 
 /*Table structure for table `aspnetuserrole` */
 
@@ -123,9 +123,11 @@ CREATE TABLE `aspnetuserrole` (
   `RoleId` int(11) NOT NULL,
   `CreateTime` datetime NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 /*Data for the table `aspnetuserrole` */
+
+insert  into `aspnetuserrole`(`Id`,`UserId`,`RoleId`,`CreateTime`) values (1,1,9,'2018-03-02 13:07:53'),(2,2,9,'2018-03-02 13:43:50'),(3,2,9,'2018-03-02 13:44:00');
 
 /*Table structure for table `authority` */
 
