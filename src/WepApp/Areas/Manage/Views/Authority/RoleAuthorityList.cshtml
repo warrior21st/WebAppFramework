@@ -1,5 +1,5 @@
 ﻿
-@model Dictionary<AspNetRole, List<DDomainInterfaceOperation>>
+@model Dictionary<AspNetRole, List<InterfaceOperation>>
 
 @{
     ViewData["Title"] = "角色权限";
@@ -40,7 +40,7 @@
                     var css = i == 0 ? "active" : "";
                     <div id="@kvp.Key.Name" class="tab-pane @css">
                         <div class="panel-body">
-                            @Html.Partial("Shared/Authorities", new KeyValuePair<List<DDomainInterfaceOperation>, List<AuthorityModel>>(kvp.Value, all))
+                            @Html.Partial("Shared/Authorities", new KeyValuePair<List<InterfaceOperation>, List<AuthorityModel>>(kvp.Value, all))
                         </div>
                         @if (base.UserInterfaceAuthorities.Contains(ManageRoleAuthorities.WRITE))
                         {

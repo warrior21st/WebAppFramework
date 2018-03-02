@@ -27,9 +27,6 @@
                     </th>
                     <th>用户名</th>
                     <th>角色</th>
-                    <th>手机号</th>
-                    @*<th class="text-center">登录要求验证手机</th>*@
-                    <th>绑定邮箱</th>
                     <th class="text-center">是否禁用</th>
                     <th class="text-center">启用二次验证</th>
                     <th class="datetime-td-fixed-width text-right">最后登录时间</th>
@@ -49,28 +46,8 @@
                             </td>
                             <td>@userModel.User.UserName</td>
                             <td>@userModel.Role.AliasName</td>
-                            <td>
-                                @if (!string.IsNullOrWhiteSpace(userModel.User.PhoneNumber))
-                                {
-                                    <span>@userModel.User.PhoneNumber &nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                    if (userModel.User.PhoneNumberConfirmed)
-                                    {
-                                        <span class="label label-primary" style="float:right">已验证</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="label label-danger" style="float:right">未验证</span>
-                                    }
-                                }
-                                else
-                                {
-                                    <span>@ViewHelper.NASymbol</span>
-                                }
-                            </td>
-                            @*<td class="text-center">@(userModel.User.LoginVerifyPhoneNumber ? "是" : "否")</td>*@
-                            <td>@userModel.User.Email</td>
                             <td class="text-center">@(userModel.User.IsDisabled ? "是" : "否")</td>
-                            <td class="text-center">@(userModel.User.TwoFactorEnabled ? "是" : "否")</td>
+                            <td class="text-center">@(userModel.User.GooleAuthEnabled ? "是" : "否")</td>
                             <td class="text-right datetime-td-fixed-width">@userModel.User.LastLoginTime.ToLocalDateTimeString()</td>
                             <td class="datetime-td-fixed-width text-right">@userModel.User.CreateTime.ToLocalDateTimeString()</td>
                             <td class="text-center">
@@ -86,7 +63,7 @@
                                             @{
                                                 if (powers.Contains(ManageUser.SET_USER_AUTHORITY))
                                                 {
-                                                    <li class="userAuthorityManage"><a href="/Manage/AuthorityManage/UserAuthorityManage?userName=@userModel.User.UserName">设置用户权限</a></li>
+                                                    <li class="userAuthorityManage"><a href="/Manage/Authority/UserAuthorityManage?userName=@userModel.User.UserName">设置用户权限</a></li>
                                                 }
                                                 if (powers.Contains(ManageUser.DELETE))
                                                 {
@@ -153,28 +130,6 @@
                             </select>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">邮箱</label>
-                        <div class="col-sm-9">
-                            <input id="mail" type="email" class="form-control" placeholder="邮箱">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">手机</label>
-                        <div class="col-sm-9">
-                            <input id="mobile" type="number" class="form-control" placeholder="手机">
-                        </div>
-                    </div>
-                    @*<div class="form-group">
-                            <label class="col-md-3 control-label visibility-hidden"></label>
-                            <div class="col-md-9">
-                                <label class="checkbox-inline i-checks">
-                                    <input id="mustVerifyPhoneNumber_checkbox" type="checkbox" />
-                                    要求使用手机验证码登录
-                                </label>
-                            </div>
-                        </div>*@
                     <div class="form-group">
                         <label class="col-md-3 control-label visibility-hidden"></label>
                         <div class="col-md-9">
@@ -278,8 +233,6 @@
             var user = {
                 Id: $('#updateUserDialog').attr('data-user-id'),
                 UserName: $('#username').val().trim(),
-                Email: $('#mail').val().trim(),
-                PhoneNumber: $('#mobile').val(),
                 IsDisabled: $('#isDisabled_checkbox').is(':checked'),
                 TwoFactorEnabled:$('#LoginVerifyToken_checkbox').is(':checked')
             };
@@ -299,10 +252,6 @@
                 utils.ShowError('请选择角色');
                 return;
             }
-            if (!user.Email) {
-                utils.ShowError('邮箱不能为空');
-                return;
-            }
 
             var para = {
                 role: role,
@@ -310,7 +259,7 @@
             };
 
             console.log(para);
-            var url = para.user.Id ? "/Manage/AuthorityManage/UpdateUser" : "/Manage/AuthorityManage/AddUser";
+            var url = para.user.Id ? "/Manage/Authority/UpdateUser" : "/Manage/Authority/AddUser";
             var loading = Ladda.create(this);
             loading.start();
             $.ajax({
@@ -345,7 +294,7 @@
                 showLoaderOnConfirm: true,
             }, function () {
                 $.ajax({
-                    url: "/Manage/AuthorityManage/DeleteUsers",
+                    url: "/Manage/Authority/DeleteUsers",
                     type: "post",
                     dataType: "json",
                     data: { ids: ids },

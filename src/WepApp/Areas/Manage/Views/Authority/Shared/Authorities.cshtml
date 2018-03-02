@@ -1,10 +1,10 @@
 ﻿
-@model KeyValuePair<List<DDomainInterfaceOperation>, List<AuthorityModel>>
+@model KeyValuePair<List<InterfaceOperation>, List<AuthorityModel>>
 
 @{
     var hasOperations = Model.Key;
     var allAuthorities = Model.Value;
-    var disableOperations = ViewData["disableOperations"] == null ? new List<DDomainInterfaceOperation>() : (List<DDomainInterfaceOperation>)ViewData["disableOperations"];
+    var disableOperations = ViewData["disableOperations"] == null ? new List<InterfaceOperation>() : (List<InterfaceOperation>)ViewData["disableOperations"];
 }
 
 

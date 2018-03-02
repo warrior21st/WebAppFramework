@@ -133,10 +133,10 @@ namespace Microsoft.AspNetCore.Http
         public static AspNetUser GetManageLoginUser(this HttpContext context)
         {
             AspNetUser user = null;
-            if (context.AppIsLogin())
+            if (context.ManageIsLogin())
             {
                 var infoStr = DataHelper.UnProtect(context.Session.GetString(USER_LOGIN_SESSION_NAME));
-                var arr = infoStr.Split(Environment.NewLine.ToArray());
+                var arr = infoStr.Split(Environment.NewLine.ToArray()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
                 user = new AspNetUser();
                 user.Id = int.Parse(arr[0]);
                 user.UserName = arr.Length > 1 ? arr[1] : null;
@@ -188,7 +188,7 @@ namespace Microsoft.AspNetCore.Http
             if (context.AppIsLogin())
             {
                 var infoStr = DataHelper.UnProtect(context.User.Identity.Name);
-                var arr = infoStr.Split(Environment.NewLine.ToArray());
+                var arr = infoStr.Split(Environment.NewLine.ToArray()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
                 user = new AppUser();
                 user.Id = int.Parse(arr[0]);
                 user.AliasName = arr.Length > 1 ? arr[1] : null;

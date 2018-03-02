@@ -20,6 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using CommonHelpers.Algorithm;
 
 namespace WebApp.Areas.Manage.Controllers
 {
@@ -29,18 +30,9 @@ namespace WebApp.Areas.Manage.Controllers
     [Area("Manage")]
     public class AccountController : ManageBaseController
     {
-        private readonly SignInManager<AspNetUser> _signInManager;
-        private readonly UserManager<AspNetUser> _userManager;
-        private readonly IUserClaimsPrincipalFactory<AspNetUser> _userClaimsPrincipalFactory;
-
-        public AccountController(ILogger<AccountController> logger, IServiceProvider serviceProvider,
-            SignInManager<AspNetUser> signInManager,
-            UserManager<AspNetUser> userManager,
-            IUserClaimsPrincipalFactory<AspNetUser> userClaimsPrincipalFactory) : base(logger, serviceProvider)
+        public AccountController(ILogger<AccountController> logger, IServiceProvider serviceProvider) : base(logger, serviceProvider)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
+
         }
 
         /// <summary>
@@ -73,21 +65,18 @@ namespace WebApp.Areas.Manage.Controllers
             var user = DbContext.Users.Single(x => x.UserName == userName);
             if (user == null)
                 return JsonBusinessErrorResult("用户名不存在");
+            if (user.PasswordHash != Hash.GetMd5(password))
+                return JsonBusinessErrorResult("密码错误");
             if (user.IsDisabled)
                 return JsonBusinessErrorResult("用户已被禁用");
 
-            var res = await _signInManager.CheckPasswordSignInAsync(user, password, false);
-            if (!res.Succeeded)
-                return JsonBusinessErrorResult("验证失败");
             if (user.GooleAuthEnabled)
             {
                 HttpContext.Session.Set("userName", Encoding.UTF8.GetBytes(user.UserName));
                 HttpContext.Session.Set("rememberMe", new byte[] { Convert.ToByte(rememberMe) });
             }
             else
-            {
-                await SignInAsync(user, rememberMe);
-            }
+                SignIn(user);
 
             return JsonSuccessResult(new { twoFactorEnabled = user.GooleAuthEnabled });
         }
@@ -143,9 +132,9 @@ namespace WebApp.Areas.Manage.Controllers
         /// <param name="user"></param>
         /// <param name="rememberMe"></param>
         /// <returns></returns>
-        private async Task SignInAsync(AspNetUser user, bool rememberMe)
+        private void SignIn(AspNetUser user)
         {
-            await _signInManager.SignInAsync(user, rememberMe);
+            HttpContext.ManageSignIn(user.Id, user.UserName);
         }
 
         /// <summary>
@@ -155,7 +144,7 @@ namespace WebApp.Areas.Manage.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<JsonResult> VerifyToken(string token)
+        public JsonResult VerifyToken(string token)
         {
             if (!HttpContext.Session.TryGetValue("userName", out var userNameBytes) || !HttpContext.Session.TryGetValue("rememberMe", out var rememberMeBytes))
                 return JsonBusinessErrorResult("会话已超时，请重新登录");
@@ -170,7 +159,7 @@ namespace WebApp.Areas.Manage.Controllers
             if (!b)
                 return JsonBusinessErrorResult("验证失败");
 
-            await SignInAsync(user, rememberMe);
+            SignIn(user);
             return JsonSuccessResult(b);
         }
     }

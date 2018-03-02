@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebApp.Authorization;
+using WebApp.Services;
 
 namespace WebApp
 {
@@ -21,10 +23,15 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession();
+
             services.AddMvc();
 
             services.AddDALByEfCore(Configuration["AppSettings:ConnectionString"]);
             services.AddGeplocation(Configuration["GeoIp:DbFileUri"]);
+
+            services.AddScoped<AuthorityService>();
+            services.AddScoped<AuthorityManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,8 +49,15 @@ namespace WebApp
 
             app.UseStaticFiles();
 
+            app.UseSession();
+
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "AreaRoute",
+                    template: "{area:exists}/{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" });
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

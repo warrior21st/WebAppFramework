@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     Layout = null;
 }
 
@@ -19,26 +20,25 @@
     <link rel="stylesheet" href="~/lib/footable/css/footable.bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
     <link rel="stylesheet" href="~/lib/ladda/dist/ladda.min.css" />
-    <link rel="stylesheet" href="~/style/lib/inspinia/animate.css" />
+    <link rel="stylesheet" href="~/lib/inspinia/animate.css" />
     <link rel="stylesheet" href="~/lib/silviomoreto-bootstrap/bootstrap-select.css" />
     <link rel="stylesheet" href="~/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />
     <link rel="stylesheet" href="~/lib/dataTables/datatables.min.css" />
-    <link rel="stylesheet" href="~/style/lib/inspinia/inspinia.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/inspinia/inspinia.css" asp-append-version="true" />
     <environment names="Development">
-        <link rel="stylesheet" href="~/style/manager/manager.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/src/manager/manager.css" asp-append-version="true" />
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/style/manager.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/dist/manager.min.css" asp-append-version="true" />
     </environment>
 
 </head>
 <body class="gray-bg">
 
     <div class="middle-box text-center loginscreen  animated fadeInDown">
-        <div id="login-container">
+        <div id="login-container" style="margin-top:150px;">
             <div>
-                <h1 class="logo-name" style="font-size:80px">DDomain</h1>
-                <h4>Use username and password to log in.</h4>
+                <h3>登录</h3>
             </div>
             <div class="form-horizontal">
                 <hr />
@@ -48,9 +48,9 @@
                 <div class="form-group">
                     <input id="password" type="password" class="form-control" placeholder="Password" />
                 </div>
-                <div class="form-group">
+                <div class="form-group hide">
                     <label for="rememberMe">
-                        <input type="checkbox" id="rememberMe" class="i-checks" checked="checked" />
+                        <input type="checkbox" id="rememberMe" class="i-checks" />
                         &nbsp;Remember me
                     </label>
                 </div>
@@ -136,7 +136,7 @@
 <script type="text/javascript">
 
     function loginSuccess() {
-        var returnUrl = utils.GetQueryParams("ReturnUrl")
+        var returnUrl = utils.GetQueryParams("returnUrl")
         returnUrl = returnUrl ? unescape(returnUrl) : returnUrl;
         returnUrl = returnUrl || "/Manage";
         window.location.href = returnUrl;

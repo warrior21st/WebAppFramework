@@ -90,7 +90,7 @@ namespace WebApp.Areas.Manage.Controllers
             get
             {
                 if (IsLogined && _currentLoginUser == null)
-                    _currentLoginUser = DbContext.Users.Single(x => x.UserName == User.Identity.Name);
+                    _currentLoginUser = DbContext.Users.Single(x => x.Id==HttpContext.GetManageLoginUser().Id);
 
                 return _currentLoginUser;
             }
@@ -120,7 +120,7 @@ namespace WebApp.Areas.Manage.Controllers
         {
             get
             {
-                return User != null && User.Identity != null && !string.IsNullOrWhiteSpace(User.Identity.Name);
+                return HttpContext.ManageIsLogin();
             }
         }
 

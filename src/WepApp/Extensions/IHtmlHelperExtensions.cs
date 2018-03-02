@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 #pragma warning disable 1591
-namespace DDomain
+namespace WebApp
 {
     public static  class IHtmlHelperExtensions
     {

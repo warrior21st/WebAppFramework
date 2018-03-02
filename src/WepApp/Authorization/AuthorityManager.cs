@@ -19,15 +19,13 @@ namespace WebApp.Authorization
     public class AuthorityManager
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<AspNetUser> _userManager;
 
         public const string GET_ALL_OPERATION_SQL = @"SELECT b.Id,a.Name AS InterfaceName,b.Name AS OperationName 
                             FROM(SELECT Id, NAME FROM `interfaceoperation` WHERE ParentName IS NULL) a,interfaceoperation b WHERE a.Name = b.ParentName";
 
-        public AuthorityManager(AppDbContext context, UserManager<AspNetUser> userManager)
+        public AuthorityManager(AppDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         /// <summary>
@@ -102,7 +100,8 @@ namespace WebApp.Authorization
             if (!MemoryCacheHelper.Exists(key))
             {
                 var list = new List<InterfaceOperationModel>();
-                var b = await _userManager.IsInRoleAsync(user, nameof(RoleTypes.Admin));
+
+                var b = (await _context.QueryNumberBySqlAsync($"SELECT COUNT(b.Id) FROM AspNetRole a,AspNetUserRole b WHERE a.Id=b.RoleId AND b.UserId={user.Id} AND a.Name='{nameof(RoleTypes.Admin)}'")) > 0;
                 string sql = GET_ALL_OPERATION_SQL;
                 if (!b)
                 {

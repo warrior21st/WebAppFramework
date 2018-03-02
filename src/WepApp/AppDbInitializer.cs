@@ -62,29 +62,52 @@ namespace WebApp
 
             var roles = RoleHelper.GetBuiltInRoles();
             var existRoles = context.Roles.ToList();
-            foreach (var role in roles)
+            if (roles.Count > existRoles.Count)
             {
-                if (!existRoles.Any(x => x.Name == role.Name))
+                foreach (var role in roles)
                 {
-                    role.CreateTime = DateTime.UtcNow;
-                    role.LastUpdate = role.CreateTime;
-                    context.Roles.Add(role);
+                    if (!existRoles.Any(x => x.Name == role.Name))
+                    {
+                        role.CreateTime = DateTime.UtcNow;
+                        role.LastUpdate = role.CreateTime;
+                        context.Roles.Add(role);
+                    }
                 }
+                await context.SaveChangesAsync();
             }
-            var password = configuration["AdminAccount:Password"];
-            var poweruser = new AspNetUser
+
+            var uid = 0;
+            var userName = configuration["AdminAccount:UserName"];
+            if (context.Users.Count(x => x.UserName == userName) == 0)
             {
-                UserName = configuration["AdminAccount:UserName"],
-                PasswordHash = Hash.GetMd5(password),
-                CreateTime = DateTime.UtcNow,
-                LastUpdate = DateTime.UtcNow,
-                AuthorityId = Guid.NewGuid().ToString("N")
-            };
-
-            if (context.Users.Count(x => x.UserName == poweruser.UserName) == 0)
+                var poweruser = new AspNetUser
+                {
+                    UserName = userName,
+                    PasswordHash = Hash.GetMd5(configuration["AdminAccount:Password"]),
+                    CreateTime = DateTime.UtcNow,
+                    LastUpdate = DateTime.UtcNow,
+                    AuthorityId = Guid.NewGuid().ToString("N")
+                };
                 context.Users.Add(poweruser);
+                await context.SaveChangesAsync();
+                uid = poweruser.Id;
+            }
+            else
+                uid = context.Users.Single(x => x.UserName == userName).Id;
 
-            await context.SaveChangesAsync();
+            var b = (await context.QueryNumberBySqlAsync($"SELECT COUNT(b.Id) FROM AspNetRole a,AspNetUserRole b WHERE a.Id=b.RoleId AND b.UserId={uid} AND a.Name='{nameof(RoleTypes.Admin)}'")) == 0;
+            if (b)
+            {
+                var userrole = new AspNetUserRole()
+                {
+                    RoleId = context.Roles.Single(x => x.Name == nameof(RoleTypes.Admin)).Id,
+                    UserId = uid,
+                    CreateTime = DateTime.UtcNow
+                };
+
+                context.UserRoles.Add(userrole);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

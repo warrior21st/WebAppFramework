@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApp.Models.ManageUser;
 using WebApp.Areas.Manage.Attributes;
+using CommonHelpers.Algorithm;
 
 namespace WebApp.Areas.Manage.Controllers
 {
@@ -20,16 +21,13 @@ namespace WebApp.Areas.Manage.Controllers
     public class AuthorityController : ManageBaseController
     {
         private readonly AuthorityService _authorityService;
-        private readonly UserManager<AspNetUser> _userManager;
         private readonly AuthorityManager _authenticator;
 
         public AuthorityController(ILogger<AuthorityController> logger, IServiceProvider serviceProvider,
             AuthorityService authorityService,
-            UserManager<AspNetUser> userManager,
             AuthorityManager authenticator) : base(logger, serviceProvider)
         {
             _authorityService = authorityService;
-            _userManager = userManager;
             _authenticator = authenticator;
         }
 
@@ -80,7 +78,7 @@ namespace WebApp.Areas.Manage.Controllers
             var list = new List<UserViewModel>();
             foreach (var user in users)
             {
-                var roles = await DbContext.QueryListBySqlAsync<AspNetRole>($"SELECT a.* FROM `aspnetroles` a, `aspnetuserroles` b WHERE a.Id=b.RoleId AND b.UserId='{user.Id}'");
+                var roles = await DbContext.QueryListBySqlAsync<AspNetRole>($"SELECT a.* FROM `aspnetrole` a, `aspnetuserrole` b WHERE a.Id=b.RoleId AND b.UserId='{user.Id}'");
                 list.Add(new UserViewModel()
                 {
                     User = user,
@@ -128,41 +126,40 @@ namespace WebApp.Areas.Manage.Controllers
         private async Task<JsonResult> AddOrUpdateUser(string role, AspNetUser user)
         {
             var oldUser = new AspNetUser();
-            if (user.Id <= 0)
+            if (user.Id > 0)
                 oldUser = DbContext.Users.Single(x => x.Id == user.Id);
             else
             {
                 oldUser.CreateTime = DateTime.UtcNow;
                 oldUser.AuthorityId = Guid.NewGuid().ToString();
                 oldUser.UserName = user.UserName;
+                oldUser.PasswordHash = Hash.GetMd5(user.PasswordHash);
             }
 
             oldUser.IsDisabled = user.IsDisabled;
-
             if (DbContext.Users.Count(x => x.UserName == oldUser.UserName && x.Id != oldUser.Id) > 0)
                 return JsonBusinessErrorResult("用户名已被使用");
 
-            if (user.Id <= 0)
-            {
-                var res = await _userManager.CreateAsync(oldUser, user.PasswordHash);
-                if (!res.Succeeded)
-                    return JsonFailureResult($"保存失败:{res.Errors.FirstOrDefault()?.Description}");
-            }
-            else
-            {
+            if (user.Id > 0)
                 DbContext.Update(oldUser);
-                await DbContext.SaveChangesAsync();
-            }
-            var roles = await _userManager.GetRolesAsync(oldUser);
-            if (!roles.Contains(role))
+            else
+                DbContext.Users.Add(oldUser);
+
+            await DbContext.SaveChangesAsync();
+
+            var newRole = DbContext.Roles.Single(x => x.Name == role);
+            var roles = await DbContext.QueryListBySqlAsync<AspNetRole>($"SELECT a.* FROM AspNetRole a,AspNetUserRole b WHERE a.Id=b.RoleId AND b.UserId={oldUser.Id}");
+            if (roles.Count > 0 && !roles.Any(x => x.Name == newRole.Name))
+                await DbContext.ExecuteNonQueryAsync($"DELETE FROM AspNetUserRole WHERE UserId={oldUser.Id}");
+
+            var userrole = new AspNetUserRole()
             {
-                var res1 = await _userManager.RemoveFromRolesAsync(oldUser, roles);
-                if (!res1.Succeeded)
-                    return JsonFailureResult($"保存失败:{res1.Errors.FirstOrDefault()?.Description}");
-                var res2 = await _userManager.AddToRoleAsync(oldUser, role);
-                if (!res2.Succeeded)
-                    return JsonFailureResult($"保存失败:{res1.Errors.FirstOrDefault()?.Description}");
-            }
+                RoleId = newRole.Id,
+                UserId = oldUser.Id,
+                CreateTime = DateTime.UtcNow
+            };
+            DbContext.UserRoles.Add(userrole);
+            await DbContext.SaveChangesAsync();
 
             return JsonSuccessResult();
         }
@@ -184,10 +181,8 @@ namespace WebApp.Areas.Manage.Controllers
                 return JsonBusinessErrorResult("系统需要保留至少一位用户");
 
             var users = DbContext.Users.Where(x => ids.Contains(x.Id)).ToList();
-            foreach (var u in users)
-            {
-                var res = await _userManager.DeleteAsync(u);
-            }
+            DbContext.Users.RemoveRange(users);
+            await DbContext.SaveChangesAsync();
 
             return JsonSuccessResult();
         }
@@ -208,8 +203,8 @@ namespace WebApp.Areas.Manage.Controllers
             if (user == null)
                 return JsonBusinessErrorResult("用户不存在或已被删除");
 
-            var role = (await _userManager.GetRolesAsync(user)).First();
-            var roleAuthId = DbContext.Roles.Single(x => x.Name == role).AuthorityId;
+            var role = (await DbContext.QueryListBySqlAsync<AspNetRole>($"SELECT a.* FROM AspNetRole a,AspNetUserRole b WHERE b.UserId={user.Id} LIMIT 0,1")).First();
+            var roleAuthId = role.AuthorityId;
 
             var operations = _authorityService.GetAuthoritiesByAuthorityId(user.AuthorityId);
             ViewData["allAuthorities"] = _authorityService.GetAllAuthorityModels();
