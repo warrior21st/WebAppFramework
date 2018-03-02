@@ -19,10 +19,8 @@ namespace WebApp
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args)
+        private static IWebHost BuildWebHost(string[] args)
         {
-            var rootDir = ServerHelper.GetRootDirectory();
-            //rootDir = "/root/";
             var webhost = WebHost.CreateDefaultBuilder(args)
                  .UseUrls(GetListenUrls())//修改默认端口
                  .UseStartup<Startup>()
@@ -30,7 +28,7 @@ namespace WebApp
                  {
                      // delete all default configuration providers
                      config.Sources.Clear();
-                     config.SetBasePath(rootDir);
+                     config.SetBasePath(Directory.GetCurrentDirectory());
                      config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                      config.AddJsonFile($"appsettings.Development.json", optional: true);
                  })
@@ -61,7 +59,7 @@ namespace WebApp
         /// </summary>
         private static IConfiguration BuildConfiguration()
         {
-            var configuration = new ConfigurationBuilder().SetBasePath(ServerHelper.GetRootDirectory())
+            var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
                  .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                  .AddJsonFile("appsettings.Development.json", optional: true)
                  .Build();

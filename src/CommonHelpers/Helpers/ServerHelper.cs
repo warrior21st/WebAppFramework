@@ -19,16 +19,7 @@ namespace CommonHelpers.Helpers
         /// <returns></returns>
         public static string GetRootDirectory()
         {
-            //typeof(ServerUtil).GetTypeInfo().Assembly.Location;
-
-#if DEBUG
-            var root = Directory.GetCurrentDirectory().Replace(Path.Combine("bin", "Debug", "netcoreapp2.0"), "");
-#else
-            var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-#endif
-
-            //root = "/root/wwwroot/zkor2.0/";
-            return root;
+            return Directory.GetCurrentDirectory();
         }
 
         /// <summary>
