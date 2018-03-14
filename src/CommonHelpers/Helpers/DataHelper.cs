@@ -10,27 +10,28 @@ namespace CommonHelpers.Helpers
     /// </summary>
     public class DataHelper
     {
-        private const string PROTECT_KEY = "salt_io_";
-
         /// <summary>
         /// 保护数据
         /// </summary>
         /// <param name="data"></param>
+        /// <param name="protectKey"></param>
+        /// <param name="encodingType"></param>
         /// <returns></returns>
-        static public String Protect(String data)
+        static public String Protect(String data, string protectKey, EncodingTypes encodingType = EncodingTypes.Base64)
         {
-            return AES.Encrypt(data, PROTECT_KEY);
+            return AES.Encrypt(data, protectKey, encodingType);
         }
 
         /// <summary>
         /// 恢复数据
         /// </summary>
         /// <param name="data"></param>
+        /// <param name="protectKey"></param>
+        /// <param name="encodingType"></param>
         /// <returns></returns>
-        static public String UnProtect(String data)
+        static public String UnProtect(String data, string protectKey, EncodingTypes encodingType = EncodingTypes.Base64)
         {
-            return AES.Decrypt(data, PROTECT_KEY);
+            return AES.Decrypt(data, protectKey, encodingType);
         }
-
     }
 }

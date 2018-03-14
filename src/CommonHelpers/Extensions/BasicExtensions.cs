@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace System
@@ -17,17 +18,17 @@ namespace System
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
-        public static bool IsNull(this string content)
+        public static bool IsEmpty(this string content)
         {
             return string.IsNullOrWhiteSpace(content);
         }
 
         /// <summary>
-        /// 过滤乱码
+        /// 剔除乱码
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
-        public static string FilterInvalidChar(this string content)
+        public static string TrimMessyChars(this string content)
         {
             string result = null;
             if (!string.IsNullOrWhiteSpace(content))
@@ -45,26 +46,14 @@ namespace System
         }
 
         /// <summary>
-        /// 移除非charset包含的字符
+        /// 移除非charset字符
         /// </summary>
-        /// <param name="charset"></param>
+        /// <param name="s"></param>
         /// <returns></returns>
-        public static string RemoveNotCharsetChar(this string charset)
+        public static string TrimNotCharsetChar(this string s)
         {
-            string result = null;
-            if (!string.IsNullOrWhiteSpace(charset))
-            {
-                var symbolArr = new char[] { '-' };
-                var ucArr = new UnicodeCategory[] { UnicodeCategory.LowercaseLetter, UnicodeCategory.UppercaseLetter, UnicodeCategory.DecimalDigitNumber };
-                foreach (var c in charset.Trim())
-                {
-                    var uc = CharUnicodeInfo.GetUnicodeCategory(c);
-                    if (symbolArr.Contains(c) || ucArr.Contains(uc))
-                        result += c;
-                }
-            }
-
-            return result;
+            var regExp = new Regex("[^A-Z_a-z_0-9_-]");
+            return regExp.Replace(s, "");
         }
 
         /// <summary>
@@ -107,7 +96,7 @@ namespace System
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public static bool IsValidDatetime(this DateTime dt)
+        public static bool IsValid(this DateTime dt)
         {
             return dt != null && dt != default(DateTime);
         }
@@ -118,7 +107,7 @@ namespace System
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static string MultiplicationBigIntegerString(this string a, string b)
+        public static string MultiplyBigIntegerString(this string a, string b)
         {
             return (BigInteger.Parse(a) * BigInteger.Parse(b)).ToString();
         }
@@ -135,18 +124,25 @@ namespace System
         }
 
         /// <summary>
+        /// bigint字符串加法
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static BigInteger MinusBitInteger(this string a, string b)
+        {
+            return BigInteger.Parse(a) + BigInteger.Parse(b);
+        }
+
+        /// <summary>
         /// 转换为biginteger
         /// </summary>
         /// <param name="a"></param>
         /// <returns></returns>
         public static BigInteger ToBigInteger(this string a)
         {
-            return string.IsNullOrWhiteSpace(a) ? 0 : BigInteger.Parse(a);
-            //BigInteger r = 0;
-            //if (BigInteger.TryParse(a, out var b))
-            //    r = b;
-
-            //return r;
+            BigInteger.TryParse(a, out var b);
+            return b;
         }
 
         /// <summary>
@@ -154,10 +150,9 @@ namespace System
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static bool IsDecimalDigitNumber(this char c)
+        public static bool IsDecimalismNumber(this char c)
         {
-            var charCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-            return charCategory == UnicodeCategory.DecimalDigitNumber;
+            return CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.DecimalDigitNumber;
         }
 
         /// <summary>
@@ -172,7 +167,7 @@ namespace System
         }
 
         /// <summary>
-        /// 去掉尾部的0
+        /// 去掉小数尾部的0
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
@@ -185,7 +180,7 @@ namespace System
                 var str = number.ToString();
                 if (str.EndsWith("0") && str.Contains("."))
                 {
-                    for (int i = str.Length - 1; i >= 0; i--)
+                    for (int i = str.Length - 1; i > -1; i--)
                     {
                         if (str[i] != '0')
                         {
@@ -193,6 +188,7 @@ namespace System
                             break;
                         }
                     }
+                    str = str.TrimEnd('.');
                     result = decimal.Parse(str);
                 }
             }
@@ -228,7 +224,7 @@ namespace System
         /// <param name="dt"></param>
         /// <param name="timeZone">时区，默认8</param>
         /// <returns></returns>
-        public static string ToLocalDateTimeString(this DateTime dt,int timeZone = 8)
+        public static string ToLocalDateTimeString(this DateTime dt, int timeZone = 8)
         {
             var d = dt;
             if (timeZone > 0)
@@ -242,12 +238,32 @@ namespace System
         /// <param name="dt"></param>
         /// <param name="timeZone">时区，默认8</param>
         /// <returns></returns>
-        public static string ToLocalDateString(this DateTime dt,int timeZone = 8)
+        public static string ToLocalDateString(this DateTime dt, int timeZone = 8)
         {
             var d = dt;
             if (timeZone > 0)
                 d = d.AddHours(timeZone);
             return d.ToStandardDateString();
+        }
+
+        /// <summary>
+        /// 转换为数据库存储日期字符串
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static string ToDbStorageDateString(this DateTime dt)
+        {
+            return dt.ToString("yyyy-MM-dd");
+        }
+
+        /// <summary>
+        /// 转换为数据库存储日期时间字符串
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static string ToDbStorageDatetimeString(this DateTime dt)
+        {
+            return dt.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
         /// <summary>

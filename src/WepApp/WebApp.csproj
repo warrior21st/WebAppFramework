@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Wangkanai.Responsive" Version="2.0.0-beta4" />
   </ItemGroup>
 
   <ItemGroup>

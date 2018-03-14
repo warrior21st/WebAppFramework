@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebApp.Authorization;
 using WebApp.Services;
+using Wangkanai.Responsive;
+using Wangkanai.Detection;
 
 namespace WebApp
 {
@@ -25,6 +27,15 @@ namespace WebApp
         {
             services.AddSession();
 
+            bool.TryParse(Configuration["SiteConfig:MobileViewEnabled"], out var b);
+            if (b)
+            {
+                // Add responsive services.
+                services.AddResponsive()
+                    .AddViewSuffix()
+                    .AddViewSubfolder();
+            }
+
             services.AddMvc();
 
             services.AddDALByEfCore(Configuration["AppSettings:ConnectionString"]);
@@ -35,7 +46,7 @@ namespace WebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -50,6 +61,15 @@ namespace WebApp
             app.UseStaticFiles();
 
             app.UseSession();
+
+            bool.TryParse(Configuration["SiteConfig:MobileViewEnabled"], out var b);
+            if (b)
+            {
+                app.UseResponsive(new ResponsiveOptions
+                {
+                    TabletDefault = DeviceType.Mobile
+                });
+            }
 
             app.UseMvc(routes =>
             {

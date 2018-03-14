@@ -1,4 +1,4 @@
-﻿using System.Text; 
+﻿using System.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -72,9 +72,21 @@ namespace CommonHelpers.Algorithm
         /// <param name="plainText"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static String Encrypt(String plainText, String key)
+        public static String Encrypt(String plainText, String key, EncodingTypes encodingType = EncodingTypes.Base64)
         {
-            return Convert.ToBase64String(EncryptStringToBytes(plainText, key));
+            var result = string.Empty;
+            var bytes = EncryptStringToBytes(plainText, key);
+            switch (encodingType)
+            {
+                case EncodingTypes.Base64:
+                    result = Convert.ToBase64String(bytes);
+                    break;
+                case EncodingTypes.Base58:
+                    result = Base58Encoding.Encode(bytes);
+                    break;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -137,12 +149,39 @@ namespace CommonHelpers.Algorithm
         /// 解密字符串
         /// </summary>
         /// <param name="s"></param>
-        /// <param name="Key"></param>
+        /// <param name="key"></param>
+        /// <param name="encodingType"></param>
         /// <returns></returns>
-        public static string Decrypt(String s, String Key)
+        public static string Decrypt(String s, String key, EncodingTypes encodingType = EncodingTypes.Base64)
         {
-            byte[] cipherText = Convert.FromBase64String(s);
-            return DecryptStringFromBytes(cipherText, Key);
-        }  
+            byte[] cipherText = null;
+            switch (encodingType)
+            {
+                case EncodingTypes.Base64:
+                    cipherText = Convert.FromBase64String(s);
+                    break;
+                case EncodingTypes.Base58:
+                    cipherText = Base58Encoding.Decode(s);
+                    break;
+            }
+
+            return DecryptStringFromBytes(cipherText, key);
+        }
+    }
+
+    /// <summary>
+    /// 编码类型
+    /// </summary>
+    public enum EncodingTypes
+    {
+        /// <summary>
+        /// base64
+        /// </summary>
+        Base64 = 0,
+
+        /// <summary>
+        /// base58
+        /// </summary>
+        Base58 = 1
     }
 }
